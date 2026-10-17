@@ -1,14 +1,14 @@
 import { activateApproveDefault } from '../features/approve-default'
 import { isInvoiceEditorRoute } from '../features/approve-default/route'
+import { activateTopPager } from '../features/top-pager'
 import type { Settings } from '../settings/schema'
 import { loadSettings } from '../settings/storage'
+import { announceActive } from '../shared/active'
 import { watchRoute } from '../shared/route'
 
-// The one console line the extension writes on a page; it also lets the smoke test see that the script runs
-const ACTIVE_MESSAGE = 'Bookkeeper Tweaks: active'
 const NOTHING_TO_UNDO = (): void => {}
 
-function activateFor(pathname: string, settings: Settings): () => void {
+function activateApprove(pathname: string, settings: Settings): () => void {
   const { enabled, action } = settings.approveDefault
 
   if (!enabled || !isInvoiceEditorRoute(pathname)) {
@@ -16,6 +16,17 @@ function activateFor(pathname: string, settings: Settings): () => void {
   }
 
   return activateApproveDefault(document.body, action)
+}
+
+// Every feature of the new app on the page at the path; the returned function deactivates them all
+function activateFor(pathname: string, settings: Settings): () => void {
+  const deactivations = [activateApprove(pathname, settings), activateTopPager(document.body, pathname, settings.topPager.enabled)]
+
+  return () => {
+    deactivations.forEach((deactivate) => {
+      deactivate()
+    })
+  }
 }
 
 // Activates the features of the page the user is on, again after every route change of the new app, always with the
@@ -36,5 +47,5 @@ async function start(): Promise<void> {
   })
 }
 
-console.debug(ACTIVE_MESSAGE)
+announceActive()
 void start()

@@ -10,6 +10,8 @@ const BUNDLE_OPTIONS = {
   entryPoints: [
     { in: path.join(ROOT, 'src/entries/app.ts'), out: 'app' },
     { in: path.join(ROOT, 'src/entries/app.css'), out: 'app' },
+    { in: path.join(ROOT, 'src/entries/classic.ts'), out: 'classic' },
+    { in: path.join(ROOT, 'src/entries/classic.css'), out: 'classic' },
     { in: path.join(ROOT, 'src/settings-page/settings.ts'), out: 'settings' },
   ],
   bundle: true,
