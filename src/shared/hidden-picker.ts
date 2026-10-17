@@ -39,7 +39,8 @@ function findOptionBody(option: Element): HTMLElement | null {
 }
 
 // Opens a Xero picker with its list hidden and clicks the option the selector names; gives false when the option does
-// not appear within a second or the pick is aborted, and then closes the list again if this call opened it
+// not appear within a second, has nothing to click or the pick is aborted, and then closes the list again if this call
+// opened it
 export async function pickHidden(pick: HiddenPick): Promise<boolean> {
   const wasOpen = pick.isOpen()
 
@@ -47,15 +48,16 @@ export async function pickHidden(pick: HiddenPick): Promise<boolean> {
   openUnlessOpen(pick, wasOpen)
 
   const option = await waitForElement(document.body, pick.optionSelector, { timeoutMs: OPTION_TIMEOUT_MS, signal: pick.signal })
+  const body = option ? findOptionBody(option) : null
 
-  if (!option) {
+  if (!body) {
     closeIfOpenedHere(pick, wasOpen)
     setListsHidden(false)
 
     return false
   }
 
-  findOptionBody(option)?.click()
+  body.click()
   setListsHidden(false)
 
   return true
