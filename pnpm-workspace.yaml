@@ -1,0 +1,2 @@
+# Blocks packages published less than a day ago, in case a fresh release turns out compromised.
+minimumReleaseAge: 1440
