@@ -10,6 +10,70 @@
 <body>
   <main class="bt-settings">
     <h1 class="bt-settings__title">Bookkeeper Tweaks</h1>
+    <p class="bt-settings__sub">Settings</p>
+    <form id="bt-settings-form">
+      <h2 class="bt-settings__section">Features</h2>
+      <div class="bt-row" data-bt-saved-scope>
+        <div>
+          <label class="bt-row__name" for="bt-approveDefault">Approve default</label>
+          <span class="bt-saved" hidden>Saved</span>
+          <p class="bt-row__text">The Approve button on an invoice does the action you pick.</p>
+        </div>
+        <input class="bt-switch" type="checkbox" role="switch" id="bt-approveDefault" name="approveDefault">
+      </div>
+      <div class="bt-row" data-bt-saved-scope>
+        <div>
+          <label class="bt-row__name" for="bt-directPrint">Direct print</label>
+          <span class="bt-saved" hidden>Saved</span>
+          <p class="bt-row__text">Print an approved invoice without downloading its PDF first.</p>
+        </div>
+        <input class="bt-switch" type="checkbox" role="switch" id="bt-directPrint" name="directPrint">
+      </div>
+      <div class="bt-row" data-bt-saved-scope>
+        <div>
+          <label class="bt-row__name" for="bt-topPager">Top pager</label>
+          <span class="bt-saved" hidden>Saved</span>
+          <p class="bt-row__text">Page navigation above long lists, not only below them.</p>
+        </div>
+        <input class="bt-switch" type="checkbox" role="switch" id="bt-topPager" name="topPager">
+      </div>
+      <div class="bt-row" data-bt-saved-scope>
+        <div>
+          <label class="bt-row__name" for="bt-recodeSort">Recode sort</label>
+          <span class="bt-saved" hidden>Saved</span>
+          <p class="bt-row__text">Sort the loaded page of Find and recode results by description.</p>
+        </div>
+        <input class="bt-switch" type="checkbox" role="switch" id="bt-recodeSort" name="recodeSort">
+      </div>
+      <fieldset class="bt-choice" data-bt-saved-scope>
+        <legend class="bt-settings__section">What the Approve button does <span class="bt-saved" hidden>Saved</span></legend>
+        <label class="bt-choice__tile">
+          <input type="radio" name="approveAction" value="approve">
+          <span>Approve</span>
+        </label>
+        <label class="bt-choice__tile">
+          <input type="radio" name="approveAction" value="approve-and-email">
+          <span>Approve &amp; email<small class="bt-choice__note">Xero's default</small></span>
+        </label>
+        <label class="bt-choice__tile">
+          <input type="radio" name="approveAction" value="approve-and-add-another">
+          <span>Approve &amp; add another</span>
+        </label>
+        <label class="bt-choice__tile">
+          <input type="radio" name="approveAction" value="approve-and-view-next">
+          <span>Approve &amp; view next<small class="bt-choice__note">Xero offers it on drafts only</small></span>
+        </label>
+        <label class="bt-choice__tile">
+          <input type="radio" name="approveAction" value="approve-and-get-link">
+          <span>Approve &amp; get link</span>
+        </label>
+        <label class="bt-choice__tile">
+          <input type="radio" name="approveAction" value="approve-and-print-pdf">
+          <span>Approve &amp; print PDF</span>
+        </label>
+      </fieldset>
+      <p class="bt-settings__hint">Changes apply when you open the next Xero page.</p>
+    </form>
     <footer class="bt-settings__footer">
       <p>Runs only on go.xero.com. Talks only to Xero — never to us or anyone else.</p>
       <p>Version <span id="bt-version"></span></p>

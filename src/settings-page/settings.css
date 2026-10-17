@@ -4,6 +4,9 @@
   --bt-text: #1f2328;
   --bt-muted: #59636e;
   --bt-rule: #d1d9e0;
+  --bt-accent: #1f7a5c;
+  --bt-accent-soft: #e3f3ec;
+  --bt-off: #8c959f;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -12,10 +15,19 @@
     --bt-text: #e6e9ed;
     --bt-muted: #9ba5b0;
     --bt-rule: #343b44;
+    --bt-accent: #4cc38a;
+    --bt-accent-soft: #17352a;
+    --bt-off: #5a636e;
   }
 }
 
+* {
+  box-sizing: border-box;
+}
+
+/* The same page is the toolbar popup, which takes its width from the page */
 body {
+  min-width: 22.5rem;
   margin: 0;
   background: var(--bt-background);
   color: var(--bt-text);
@@ -29,11 +41,140 @@ body {
 }
 
 .bt-settings__title {
-  margin: 0 0 1.5rem;
+  margin: 0;
   font-size: 1.5rem;
 }
 
+.bt-settings__sub {
+  margin: 0 0 0.5rem;
+  color: var(--bt-muted);
+}
+
+.bt-settings__section {
+  margin: 1.25rem 0 0.5rem;
+  padding: 0;
+  color: var(--bt-muted);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.bt-row {
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.55rem 0;
+  border-bottom: 1px solid var(--bt-rule);
+}
+
+.bt-row__name {
+  font-weight: 600;
+}
+
+.bt-row__text {
+  margin: 0;
+  color: var(--bt-muted);
+  font-size: 0.875rem;
+}
+
+.bt-saved {
+  margin-left: 0.4rem;
+  color: var(--bt-accent);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: normal;
+  text-transform: none;
+}
+
+.bt-switch {
+  appearance: none;
+  position: relative;
+  flex: none;
+  width: 2.25rem;
+  height: 1.25rem;
+  margin: 0;
+  border-radius: 1rem;
+  background: var(--bt-off);
+  cursor: pointer;
+}
+
+.bt-switch::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: calc(1.25rem - 4px);
+  height: calc(1.25rem - 4px);
+  border-radius: 50%;
+  background: #ffffff;
+  transition: left 0.15s;
+}
+
+.bt-switch:checked {
+  background: var(--bt-accent);
+}
+
+.bt-switch:checked::after {
+  left: calc(100% - 1.25rem + 2px);
+}
+
+.bt-switch:focus-visible,
+.bt-choice__tile:has(input:focus-visible) {
+  outline: 2px solid var(--bt-accent);
+  outline-offset: 2px;
+}
+
+/* A legend's own top margin does not apply, so the fieldset keeps the section spacing */
+.bt-choice {
+  display: grid;
+  gap: 0.4rem;
+  grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr));
+  margin: 1.25rem 0 0;
+  padding: 0;
+  border: 0;
+}
+
+.bt-choice legend {
+  margin-top: 0;
+}
+
+.bt-choice__tile {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 0.6rem;
+  border: 1px solid var(--bt-rule);
+  border-radius: 6px;
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+
+.bt-choice__tile input {
+  margin: 0;
+  accent-color: var(--bt-accent);
+}
+
+.bt-choice__tile:has(input:checked) {
+  border-color: var(--bt-accent);
+  background: var(--bt-accent-soft);
+}
+
+.bt-choice__note {
+  display: block;
+  color: var(--bt-muted);
+  font-size: 0.75rem;
+}
+
+.bt-settings__hint {
+  margin: 1rem 0 0;
+  color: var(--bt-muted);
+  font-size: 0.875rem;
+}
+
 .bt-settings__footer {
+  margin-top: 1.5rem;
   border-top: 1px solid var(--bt-rule);
   padding-top: 1rem;
   color: var(--bt-muted);
@@ -42,4 +183,10 @@ body {
 
 .bt-settings__footer p {
   margin: 0 0 0.25rem;
+}
+
+@media (max-width: 26rem) {
+  .bt-settings {
+    padding: 1rem;
+  }
 }

@@ -10,6 +10,7 @@ interface BuiltManifest {
   host_permissions?: string[]
   content_scripts: { js: string[], css: string[] }[]
   options_ui: { page: string, open_in_tab: boolean }
+  action: { default_popup: string }
 }
 
 const TEMP_PREFIX = path.join(tmpdir(), 'bookkeeper-tweaks-build-')
@@ -69,6 +70,10 @@ describe('the built manifest', () => {
 describe('the built settings page', () => {
   it('opens in a tab as the options page', async () => {
     expect((await readManifest()).options_ui).toEqual({ page: 'settings.html', open_in_tab: true })
+  })
+
+  it('is the toolbar popup too', async () => {
+    expect((await readManifest()).action.default_popup).toBe('settings.html')
   })
 
   it('finds every file it references', async () => {

@@ -9,6 +9,10 @@
     "page": "settings.html",
     "open_in_tab": true
   },
+  "action": {
+    "default_popup": "settings.html",
+    "default_title": "Bookkeeper Tweaks settings"
+  },
   "content_scripts": [
     {
       "matches": ["https://go.xero.com/app/*"],
