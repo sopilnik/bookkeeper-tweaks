@@ -14,6 +14,9 @@ const SUBMITTED_INVOICE_ACTIONS = APPROVE_ACTIONS.filter((action) => action !== 
 const OPTION_TIMEOUT_MS = 1000
 const COOLDOWN_MS = 1500
 const SEPARATOR = ' '
+const CLICK_EVENT = 'click'
+const TEXT = 'Not an element'
+const TRIGGER_SELECTOR = '[data-automationid="ApproveAndEmailButton-dropdown-trigger"]'
 let stop = (): void => {}
 let removeStub = (): void => {}
 
@@ -110,5 +113,35 @@ describe('takeOverApproveClicks', () => {
     await vi.runAllTimersAsync()
 
     expect(onMissing).not.toHaveBeenCalled()
+  })
+
+  it('lets a click whose target is no element pass', () => {
+    const heard = vi.fn()
+    const text = document.createTextNode(TEXT)
+    const click = new Event(CLICK_EVENT, { bubbles: true })
+
+    removeStub = installXuiStub(APPROVE_ACTIONS)
+    stop = takeOverApproveClicks({ chosen: APPROVE, onMissing: vi.fn() })
+    document.body.append(text)
+    document.addEventListener(CLICK_EVENT, heard)
+
+    text.dispatchEvent(click)
+    document.removeEventListener(CLICK_EVENT, heard)
+
+    expect(heard).toHaveBeenCalledExactlyOnceWith(click)
+  })
+
+  it('reports a missing option when the group has no menu trigger', async () => {
+    const onMissing = vi.fn()
+
+    removeStub = installXuiStub(APPROVE_ACTIONS)
+    document.querySelector(TRIGGER_SELECTOR)?.remove()
+    stop = takeOverApproveClicks({ chosen: APPROVE, onMissing })
+
+    clickPrimary()
+    await vi.advanceTimersByTimeAsync(0)
+
+    expect(onMissing).toHaveBeenCalledOnce()
+    expect(performed()).toEqual([])
   })
 })

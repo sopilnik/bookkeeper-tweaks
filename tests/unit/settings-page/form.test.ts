@@ -4,6 +4,7 @@ import { beforeEach, describe, expect, it } from 'vitest'
 import { DEFAULT_SETTINGS } from '../../../src/settings/schema'
 import type { Settings } from '../../../src/settings/schema'
 import { fillForm, readForm, showSaved } from '../../../src/settings-page/form'
+import { queryRequired } from '../helpers/query'
 
 // Read from the repository root, where Vitest runs
 const PAGE_FILE = 'src/settings-page/settings.html'
@@ -20,16 +21,6 @@ const CHANGED: Settings = {
   topPager: { enabled: true },
   directPrint: { enabled: false },
   recodeSort: { enabled: true },
-}
-
-function queryRequired<T extends Element>(root: ParentNode, selector: string): T {
-  const element = root.querySelector<T>(selector)
-
-  if (!element) {
-    throw new Error(selector)
-  }
-
-  return element
 }
 
 function settingsForm(): HTMLFormElement {

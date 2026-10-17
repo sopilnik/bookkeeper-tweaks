@@ -3,6 +3,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import { keepRelabelled } from '../../../../src/features/approve-default/relabel'
 import type { ApproveAction } from '../../../../src/settings/schema'
 import { loadEditorFixture } from '../../helpers/fixture'
+import { queryRequired } from '../../helpers/query'
 
 const GROUP_SELECTOR = 'div.ApproveAndEmailButton'
 const PRIMARY_SELECTOR = '#ApproveAndEmailButton-approve-and-email'
@@ -11,19 +12,15 @@ const DOT_SELECTOR = '.bt-approve-dot'
 const HIDDEN_TOOLTIP_CLASS = 'bt-approve-tooltip-hidden'
 const ROOT_SELECTOR = '#shell-app-root'
 const XERO_LABEL = 'Approve & email'
+const TITLE_ATTRIBUTE = 'title'
+const TOOLTIP_ATTRIBUTE = 'aria-describedby'
 const APPROVE: ApproveAction = 'approve'
 const VIEW_NEXT: ApproveAction = 'approve-and-view-next'
 const XERO_ACTION: ApproveAction = 'approve-and-email'
 let stop = (): void => {}
 
 function element(selector: string): Element {
-  const found = document.querySelector(selector)
-
-  if (!found) {
-    throw new Error(selector)
-  }
-
-  return found
+  return queryRequired(document, selector)
 }
 
 function nextTask(): Promise<void> {
@@ -46,7 +43,7 @@ describe('keepRelabelled', () => {
 
     expect(element(PRIMARY_SELECTOR).textContent).toBe('Approve')
     expect(element(TOOLTIP_SELECTOR).textContent).toBe('Ctrl-Alt-A')
-    expect(element(DOT_SELECTOR).getAttribute('title')).toBe('Set by Bookkeeper Tweaks')
+    expect(element(DOT_SELECTOR).getAttribute(TITLE_ATTRIBUTE)).toBe('Set by Bookkeeper Tweaks')
   })
 
   it('writes into Xero\'s own text node', () => {
@@ -110,5 +107,28 @@ describe('keepRelabelled', () => {
     expect(element(PRIMARY_SELECTOR).textContent).toBe(XERO_LABEL)
     expect(element(TOOLTIP_SELECTOR).textContent).toBe('Ctrl-Alt-E')
     expect(document.querySelector(DOT_SELECTOR)).toBeNull()
+  })
+
+  it('relabels a button whose tooltip is missing', () => {
+    element(PRIMARY_SELECTOR).removeAttribute(TOOLTIP_ATTRIBUTE)
+
+    stop = keepRelabelled(document.body, APPROVE)
+
+    expect(element(PRIMARY_SELECTOR).textContent).toBe('Approve')
+    expect(element(TOOLTIP_SELECTOR).textContent).toBe('Ctrl-Alt-E')
+  })
+
+  it('skips a group without its primary button, on relabel and on stop', () => {
+    const emptyGroup = element(GROUP_SELECTOR).cloneNode(true)
+
+    if (emptyGroup instanceof Element) {
+      queryRequired(emptyGroup, PRIMARY_SELECTOR).remove()
+      element(ROOT_SELECTOR).append(emptyGroup)
+    }
+
+    keepRelabelled(document.body, APPROVE)()
+
+    expect(document.querySelectorAll(DOT_SELECTOR)).toHaveLength(0)
+    expect(element(PRIMARY_SELECTOR).textContent).toBe(XERO_LABEL)
   })
 })

@@ -10,6 +10,7 @@ const PRIMARY_SELECTOR = '#ApproveAndEmailButton-approve-and-email'
 const DOT_SELECTOR = '.bt-approve-dot'
 const NOTICE_SELECTOR = '.bt-approve-notice'
 const PERFORMED_ATTRIBUTE = 'data-bt-performed'
+const TITLE_ATTRIBUTE = 'title'
 const PAGE_ROOT_SELECTOR = 'html'
 const VISIBLE_MARK_SELECTOR = '.bt-saved:not([hidden])'
 const DRAFT_ONLY = 'approve-and-view-next'
@@ -44,7 +45,7 @@ test.describe('Approve default', () => {
     await openEditor(page, APPROVE_ACTIONS)
 
     await expect(page.locator(PRIMARY_SELECTOR)).toHaveText('Approve')
-    await expect(page.locator(DOT_SELECTOR)).toHaveAttribute('title', 'Set by Bookkeeper Tweaks')
+    await expect(page.locator(DOT_SELECTOR)).toHaveAttribute(TITLE_ATTRIBUTE, 'Set by Bookkeeper Tweaks')
 
     await page.locator(PRIMARY_SELECTOR).click()
 

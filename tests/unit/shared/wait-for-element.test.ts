@@ -5,6 +5,7 @@ import { waitForElement } from '../../../src/shared/wait-for-element'
 const TARGET_SELECTOR = '#bt-target'
 const TARGET_ID = 'bt-target'
 const TARGET_TAG = 'div'
+const OTHER_TAG = 'span'
 const SHORT_TIMEOUT_MS = 20
 const LONG_TIMEOUT_MS = 1000
 
@@ -15,6 +16,10 @@ function addTarget(): HTMLElement {
   document.body.append(target)
 
   return target
+}
+
+function addOther(): void {
+  document.body.append(document.createElement(OTHER_TAG))
 }
 
 afterEach(() => {
@@ -44,6 +49,25 @@ describe('waitForElement', () => {
     const waiting = waitForElement(document.body, TARGET_SELECTOR, { timeoutMs: LONG_TIMEOUT_MS, signal: controller.signal })
 
     controller.abort()
+
+    expect(await waiting).toBeNull()
+  })
+
+  it('keeps waiting through changes that do not bring the element', async () => {
+    const waiting = waitForElement(document.body, TARGET_SELECTOR, { timeoutMs: LONG_TIMEOUT_MS })
+
+    addOther()
+    await Promise.resolve()
+
+    const target = addTarget()
+
+    expect(await waiting).toBe(target)
+  })
+
+  it('gives null when only other elements appear', async () => {
+    const waiting = waitForElement(document.body, TARGET_SELECTOR, { timeoutMs: SHORT_TIMEOUT_MS })
+
+    addOther()
 
     expect(await waiting).toBeNull()
   })
