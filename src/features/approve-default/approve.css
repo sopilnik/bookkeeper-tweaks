@@ -1,0 +1,21 @@
+/* Feature 1: the dot that marks a relabelled Approve button, and Xero's shortcut tooltip when the chosen action has
+   no shortcut */
+.bt-approve-group {
+  position: relative;
+}
+
+.bt-approve-dot {
+  position: absolute;
+  top: -4px;
+  right: 26px;
+  z-index: 1;
+  width: 10px;
+  height: 10px;
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  background: #1f7a5c;
+}
+
+.bt-approve-tooltip-hidden {
+  display: none !important;
+}
