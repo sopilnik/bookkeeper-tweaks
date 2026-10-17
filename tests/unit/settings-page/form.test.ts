@@ -16,6 +16,7 @@ const OTHER_SWITCH_SELECTOR = '#bt-topPager'
 const ACTION_SELECTOR = 'input[value="approve-and-print-pdf"]'
 const ACTION_INPUTS_SELECTOR = 'input[name="approveAction"]'
 const VISIBLE_MARK_SELECTOR = '.bt-saved:not([hidden])'
+const FORM_TAG = 'form'
 const CHANGED: Settings = {
   approveDefault: { enabled: false, action: 'approve-and-print-pdf' },
   topPager: { enabled: true },
@@ -77,5 +78,17 @@ describe('the saved mark', () => {
     showSaved(settingsForm(), control(ACTION_SELECTOR))
 
     expect(visibleMarks()).toEqual([expect.stringContaining('What the Approve button does')])
+  })
+})
+
+describe('a form without its controls', () => {
+  it('reads as the defaults', () => {
+    expect(readForm(document.createElement(FORM_TAG))).toEqual(DEFAULT_SETTINGS)
+  })
+
+  it('takes settings without complaint', () => {
+    expect(() => {
+      fillForm(document.createElement(FORM_TAG), CHANGED)
+    }).not.toThrow()
   })
 })

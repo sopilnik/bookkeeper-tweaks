@@ -23,8 +23,9 @@ function findActionRadios(fields: HTMLFormControlsCollection): HTMLInputElement[
   return field instanceof RadioNodeList ? Array.from(field).filter(isInput) : []
 }
 
-function isSwitchedOn(fields: HTMLFormControlsCollection, feature: string): boolean {
-  return findSwitch(fields, feature)?.checked === true
+// undefined when the form has no such switch, so the feature's default applies
+function switchState(fields: HTMLFormControlsCollection, feature: string): boolean | undefined {
+  return findSwitch(fields, feature)?.checked
 }
 
 function chosenAction(fields: HTMLFormControlsCollection): string {
@@ -63,7 +64,7 @@ function showOnlyMark(marks: NodeListOf<HTMLElement>, mark: Element | null): voi
 
 // What the form shows, as settings; anything the form cannot say falls back to the defaults
 export function readForm(form: HTMLFormElement): Settings {
-  const switches = Object.fromEntries(FEATURES.map((feature) => [feature, { enabled: isSwitchedOn(form.elements, feature) }]))
+  const switches = Object.fromEntries(FEATURES.map((feature) => [feature, { enabled: switchState(form.elements, feature) }]))
   const approveDefault = { ...switches.approveDefault, action: chosenAction(form.elements) }
 
   return normalizeSettings({ ...switches, approveDefault })
