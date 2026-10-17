@@ -13,6 +13,7 @@
     {
       "matches": ["https://go.xero.com/app/*"],
       "js": ["app.js"],
+      "css": ["app.css"],
       "run_at": "document_idle"
     }
   ],

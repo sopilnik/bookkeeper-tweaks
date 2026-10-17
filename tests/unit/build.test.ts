@@ -8,7 +8,7 @@ interface BuiltManifest {
   manifest_version: number
   permissions: string[]
   host_permissions?: string[]
-  content_scripts: { js: string[] }[]
+  content_scripts: { js: string[], css: string[] }[]
   options_ui: { page: string, open_in_tab: boolean }
 }
 
@@ -17,6 +17,7 @@ const MANIFEST_FILE = 'manifest.json'
 const TEXT_ENCODING = 'utf8'
 const MODULE_SYNTAX = /^\s*(import|export)\b/m
 const LOCAL_REFERENCE = /(?:src|href)="([^":]+)"/g
+const PICKING_SELECTOR = '.bt-picking'
 let outDir = ''
 
 async function readBuilt(file: string): Promise<string> {
@@ -54,6 +55,14 @@ describe('the built manifest', () => {
 
     expect(files).toContain('app.js')
     expect(sources.filter((source) => MODULE_SYNTAX.test(source))).toEqual([])
+  })
+
+  it('builds the style sheet of every content script', async () => {
+    const files = (await readManifest()).content_scripts.flatMap((script) => script.css)
+    const sheets = await Promise.all(files.map(readBuilt))
+
+    expect(files).toEqual(['app.css'])
+    expect(sheets.every((sheet) => sheet.includes(PICKING_SELECTOR))).toBe(true)
   })
 })
 

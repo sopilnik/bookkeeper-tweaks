@@ -7,10 +7,11 @@ const ROOT = path.resolve(import.meta.dirname, '..')
 const DIST_DIR = path.join(ROOT, 'dist')
 // Content scripts cannot be ES modules, so every entry becomes a classic script
 const BUNDLE_OPTIONS = {
-  entryPoints: {
-    app: path.join(ROOT, 'src/entries/app.ts'),
-    settings: path.join(ROOT, 'src/settings-page/settings.ts'),
-  },
+  entryPoints: [
+    { in: path.join(ROOT, 'src/entries/app.ts'), out: 'app' },
+    { in: path.join(ROOT, 'src/entries/app.css'), out: 'app' },
+    { in: path.join(ROOT, 'src/settings-page/settings.ts'), out: 'settings' },
+  ],
   bundle: true,
   format: 'iife',
   target: 'chrome111',

@@ -1,0 +1,5 @@
+/* While the extension picks an option for the user, Xero's open lists stay invisible and cannot be clicked */
+.bt-picking .xui-dropdown-layout {
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
