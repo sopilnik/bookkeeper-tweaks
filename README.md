@@ -5,7 +5,7 @@ pages, all running in your browser.
 
 Not affiliated with or endorsed by Xero Limited.
 
-> Work in progress: the features below arrive one at a time. Until then the extension does nothing on Xero's pages.
+> Work in progress: Approve default works; the other three features arrive one at a time.
 
 ## Features
 
@@ -15,7 +15,8 @@ Not affiliated with or endorsed by Xero Limited.
 3. **Top pager** — page navigation above long lists, not only below them.
 4. **Recode sort** — sort the loaded page of Find and recode results by description.
 
-Each feature has its own switch in the settings; all four are on after install.
+Each feature has its own switch in the settings, which open from the extension's icon in Chrome's toolbar; all four
+are on after install.
 
 ## Design rules
 
