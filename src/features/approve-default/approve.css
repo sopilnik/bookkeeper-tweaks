@@ -20,7 +20,8 @@
   display: none !important;
 }
 
-/* The callout shown when Xero's menu lacks the chosen action */
+/* The callout shown when Xero's menu lacks the chosen action; it wraps its own text, because Xero's page header sets
+   white-space: nowrap */
 .bt-approve-notice-host {
   position: relative;
 }
@@ -38,6 +39,7 @@
   color: #5c3b00;
   font: 12px/1.4 system-ui, sans-serif;
   text-align: left;
+  white-space: normal;
   box-shadow: 0 2px 8px rgb(0 0 0 / 0.15);
 }
 

@@ -21,6 +21,9 @@ const PRINT_PDF_LABEL = 'Approve & print PDF'
 const SUBMITTED_ACTIONS = APPROVE_ACTIONS.filter((action) => action !== DRAFT_ONLY)
 // The takeover steps aside 1.5 s after the notice; wait a little longer
 const AFTER_COOLDOWN_MS = 2000
+// Xero's page header as read on the demo company: the Approve group passes white-space: nowrap on to what it holds,
+// and every box is sized border-box
+const XERO_HEADER_STYLE = '.ApproveAndEmailButton { white-space: nowrap } *, *::before, *::after { box-sizing: border-box }'
 
 async function openEditor(page: Page, actions: readonly string[]): Promise<void> {
   await page.addInitScript(installXuiStub, actions)
@@ -31,6 +34,18 @@ async function changeSetting(page: Page, label: string): Promise<void> {
   await page.goto(SETTINGS_URL)
   await page.getByLabel(label).click()
   await expect(page.locator(VISIBLE_MARK_SELECTOR)).toHaveText('Saved')
+}
+
+// Chooses an action a submitted invoice's menu lacks and clicks Approve on one, so the click ends in the notice
+async function clickWithoutTheAction(page: Page): Promise<void> {
+  await changeSetting(page, DRAFT_ONLY_LABEL)
+  await openEditor(page, SUBMITTED_ACTIONS)
+  await page.locator(PRIMARY_SELECTOR).click()
+}
+
+// How far an element's content runs past its box, in pixels; runs in the page
+function overflowOf(element: Element): number {
+  return element.scrollWidth - element.clientWidth
 }
 
 // Moves the page to another route the way the new app does: the path changes, then the page. Runs in the page, so its
@@ -55,9 +70,7 @@ test.describe('Approve default', () => {
   })
 
   test('gives the button back to Xero when its menu lacks the action', async ({ page }) => {
-    await changeSetting(page, DRAFT_ONLY_LABEL)
-    await openEditor(page, SUBMITTED_ACTIONS)
-    await page.locator(PRIMARY_SELECTOR).click()
+    await clickWithoutTheAction(page)
 
     await expect(page.locator(NOTICE_SELECTOR)).toContainText("Could not pick 'Approve & view next'")
     await expect(page.locator(PRIMARY_SELECTOR)).toHaveText('Approve & email')
@@ -66,6 +79,13 @@ test.describe('Approve default', () => {
     await page.locator(PRIMARY_SELECTOR).click()
 
     await expect(page.locator(PAGE_ROOT_SELECTOR)).toHaveAttribute(PERFORMED_ATTRIBUTE, 'approve-and-email')
+  })
+
+  test("keeps the notice's text inside its box under Xero's header", async ({ page }) => {
+    await clickWithoutTheAction(page)
+    await page.addStyleTag({ content: XERO_HEADER_STYLE })
+
+    expect(await page.locator(NOTICE_SELECTOR).evaluate(overflowOf)).toBe(0)
   })
 
   test('steps aside when the user leaves the invoice', async ({ page }) => {
