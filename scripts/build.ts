@@ -7,13 +7,16 @@ const ROOT = path.resolve(import.meta.dirname, '..')
 const DIST_DIR = path.join(ROOT, 'dist')
 // Content scripts cannot be ES modules, so every entry becomes a classic script
 const BUNDLE_OPTIONS = {
-  entryPoints: { app: path.join(ROOT, 'src/entries/app.ts') },
+  entryPoints: {
+    app: path.join(ROOT, 'src/entries/app.ts'),
+    settings: path.join(ROOT, 'src/settings-page/settings.ts'),
+  },
   bundle: true,
   format: 'iife',
   target: 'chrome111',
   logLevel: 'warning',
 } satisfies BuildOptions
-const STATIC_FILES = ['manifest.json']
+const STATIC_FILES = ['manifest.json', 'src/settings-page/settings.html', 'src/settings-page/settings.css']
 
 async function bundleEntries(outDir: string): Promise<void> {
   await build({ ...BUNDLE_OPTIONS, outdir: outDir })

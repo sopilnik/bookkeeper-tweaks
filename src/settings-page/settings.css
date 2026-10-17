@@ -1,0 +1,45 @@
+:root {
+  color-scheme: light dark;
+  --bt-background: #ffffff;
+  --bt-text: #1f2328;
+  --bt-muted: #59636e;
+  --bt-rule: #d1d9e0;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bt-background: #15181d;
+    --bt-text: #e6e9ed;
+    --bt-muted: #9ba5b0;
+    --bt-rule: #343b44;
+  }
+}
+
+body {
+  margin: 0;
+  background: var(--bt-background);
+  color: var(--bt-text);
+  font: 15px/1.5 system-ui, sans-serif;
+}
+
+.bt-settings {
+  max-width: 40rem;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+.bt-settings__title {
+  margin: 0 0 1.5rem;
+  font-size: 1.5rem;
+}
+
+.bt-settings__footer {
+  border-top: 1px solid var(--bt-rule);
+  padding-top: 1rem;
+  color: var(--bt-muted);
+  font-size: 0.875rem;
+}
+
+.bt-settings__footer p {
+  margin: 0 0 0.25rem;
+}

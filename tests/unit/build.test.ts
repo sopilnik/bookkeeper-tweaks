@@ -9,12 +9,14 @@ interface BuiltManifest {
   permissions: string[]
   host_permissions?: string[]
   content_scripts: { js: string[] }[]
+  options_ui: { page: string, open_in_tab: boolean }
 }
 
 const TEMP_PREFIX = path.join(tmpdir(), 'bookkeeper-tweaks-build-')
 const MANIFEST_FILE = 'manifest.json'
 const TEXT_ENCODING = 'utf8'
 const MODULE_SYNTAX = /^\s*(import|export)\b/m
+const LOCAL_REFERENCE = /(?:src|href)="([^":]+)"/g
 let outDir = ''
 
 async function readBuilt(file: string): Promise<string> {
@@ -52,5 +54,20 @@ describe('the built manifest', () => {
 
     expect(files).toContain('app.js')
     expect(sources.filter((source) => MODULE_SYNTAX.test(source))).toEqual([])
+  })
+})
+
+describe('the built settings page', () => {
+  it('opens in a tab as the options page', async () => {
+    expect((await readManifest()).options_ui).toEqual({ page: 'settings.html', open_in_tab: true })
+  })
+
+  it('finds every file it references', async () => {
+    const page = await readBuilt((await readManifest()).options_ui.page)
+    const references = [...page.matchAll(LOCAL_REFERENCE)].map((match) => match[1])
+
+    await Promise.all(references.map(readBuilt))
+
+    expect(references).toEqual(['settings.css', 'settings.js'])
   })
 })
