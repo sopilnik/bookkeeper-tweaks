@@ -1,0 +1,121 @@
+/* Feature 3: the top bar, drawn in the look of the list it sits on. Xero draws these lists light whatever the system
+   theme, so the bar has no dark variant. Every control sets the text properties it depends on, because Xero's page
+   CSS reaches into what the extension adds */
+.bt-pager {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-sizing: border-box;
+  white-space: nowrap;
+}
+
+.bt-pager__select {
+  margin: 0;
+  color: inherit;
+  font: inherit;
+}
+
+.bt-pager__step {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.bt-pager__step:disabled {
+  font-weight: normal;
+  cursor: default;
+}
+
+/* The classic invoice list: at the left of the strip above the table, in its 11 px Helvetica and link blue */
+.bt-pager--classic {
+  height: 28px;
+  vertical-align: middle;
+  color: #444444;
+  font: 11px Helvetica, Arial, sans-serif;
+}
+
+.bt-pager--classic .bt-pager__select {
+  height: 16px;
+  padding: 0;
+  border: 1px solid #767676;
+}
+
+.bt-pager--classic .bt-pager__step {
+  color: #048fc2;
+  font-size: 12px;
+}
+
+.bt-pager--classic .bt-pager__step:disabled {
+  color: #999999;
+}
+
+/* Find and recode: at the right of the results toolbar, which Ext positions itself */
+.bt-pager--ext {
+  position: absolute;
+  top: 9px;
+  right: 12px;
+  height: 32px;
+  gap: 14px;
+  color: #333333;
+  font: 12px Helvetica, Arial, sans-serif;
+}
+
+.bt-pager--ext .bt-pager__select {
+  height: 24px;
+  padding: 0 4px;
+  border: 1px solid #c5c5c5;
+  border-radius: 2px;
+  background: #ffffff;
+}
+
+.bt-pager--ext .bt-pager__step {
+  color: #048fc2;
+}
+
+.bt-pager--ext .bt-pager__step:disabled {
+  color: #8a8a8a;
+}
+
+/* Bills: at the left of the row above the table, centred in it, so the row keeps Xero's height */
+.xui-u-flex-justify-end:has(> .bt-pager--xui) {
+  position: relative;
+}
+
+.bt-pager--xui {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  gap: 12px;
+  transform: translateY(-50%);
+  color: #000a1e;
+  font: 13px "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.bt-pager--xui .bt-pager__select {
+  height: 32px;
+  padding: 0 8px;
+  border: 1px solid #a3a7ae;
+  border-radius: 3px;
+  background: #ffffff;
+}
+
+.bt-pager--xui .bt-pager__step {
+  color: #0078c8;
+}
+
+.bt-pager--xui .bt-pager__step:disabled {
+  color: #a3a7ae;
+}
+
+/* Below 700 px the bar would cover Xero's own text in the Find and recode toolbar and in the Bills row; there Xero's
+   pager under the list stays the only one */
+@media (max-width: 699px) {
+  .bt-pager--ext,
+  .bt-pager--xui {
+    display: none;
+  }
+}
