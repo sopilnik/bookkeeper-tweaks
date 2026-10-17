@@ -15,13 +15,16 @@
     "node": ">=26"
   },
   "scripts": {
-    "lint": "eslint --max-warnings 0 src tests *.js *.ts",
+    "build": "node scripts/build.ts",
+    "lint": "eslint --max-warnings 0 scripts src tests *.js *.ts",
     "typecheck": "tsc --noEmit",
     "test": "vitest run"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",
     "@stylistic/eslint-plugin": "5.10.0",
+    "@types/node": "26.6.5",
+    "esbuild": "0.28.2",
     "eslint": "10.12.0",
     "typescript": "6.0.3",
     "typescript-eslint": "8.71.2",
