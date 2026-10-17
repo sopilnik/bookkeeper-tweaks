@@ -15,7 +15,7 @@
     "node": ">=26"
   },
   "scripts": {
-    "lint": "eslint --max-warnings 0 tests *.js *.ts",
+    "lint": "eslint --max-warnings 0 src tests *.js *.ts",
     "typecheck": "tsc --noEmit",
     "test": "vitest run"
   },
