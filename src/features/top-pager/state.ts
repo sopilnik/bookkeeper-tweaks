@@ -46,6 +46,17 @@ export function hasNext(state: PagerState): boolean {
   return state.page < state.pages
 }
 
+// The page delta steps away from the current one (-1 back, 1 on); null when there is none or no pager
+export function neighbourPage(state: PagerState | null, delta: number): number | null {
+  if (!state) {
+    return null
+  }
+
+  const page = state.page + delta
+
+  return page >= FIRST_PAGE && page <= state.pages ? page : null
+}
+
 // The page numbers a page picker offers, from the first to the last
 export function pageNumbers(pages: number): number[] {
   return Array.from({ length: pages }, (_, index) => index + FIRST_PAGE)

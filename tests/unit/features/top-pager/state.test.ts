@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import type { PagerState } from '../../../../src/features/top-pager/state'
-import { firstNumber, hasNext, hasPrevious, nextBarStep, pageNumbers, parsePageOf, stateKey } from '../../../../src/features/top-pager/state'
+import { firstNumber, hasNext, hasPrevious, neighbourPage, nextBarStep, pageNumbers, parsePageOf, stateKey } from '../../../../src/features/top-pager/state'
 
 const SECOND_OF_FOUR: PagerState = { page: 2, pages: 4, pageSize: 10, pageSizes: [10, 25], canPickPage: true }
 const FIRST_OF_TWO: PagerState = { ...SECOND_OF_FOUR, page: 1, pages: 2 }
@@ -13,6 +13,8 @@ const COUNT_TEXT = 'Showing items 1-10 of 37'
 const EXT_SIZE_TEXT = '100 items per page'
 const XUI_SIZE_TEXT = ' 25 '
 const NO_NUMBER_TEXT = 'per page'
+const BACK = -1
+const ON = 1
 
 describe('parsePageOf', () => {
   it('reads the page and the pages of every spelling Xero uses', () => {
@@ -42,6 +44,12 @@ describe('the steps', () => {
     expect([hasPrevious(FIRST_OF_TWO), hasNext(FIRST_OF_TWO)]).toEqual([false, true])
     expect([hasPrevious(SECOND_OF_FOUR), hasNext(SECOND_OF_FOUR)]).toEqual([true, true])
     expect([hasPrevious(LAST_OF_TWO), hasNext(LAST_OF_TWO)]).toEqual([true, false])
+  })
+
+  it('finds the page before and after within the list only', () => {
+    expect([neighbourPage(SECOND_OF_FOUR, BACK), neighbourPage(SECOND_OF_FOUR, ON)]).toEqual([1, 3])
+    expect([neighbourPage(FIRST_OF_TWO, BACK), neighbourPage(LAST_OF_TWO, ON)]).toEqual([null, null])
+    expect(neighbourPage(null, ON)).toBeNull()
   })
 
   it('numbers the pages from one', () => {

@@ -1,0 +1,37 @@
+<!-- Xero's classic invoice list (/AccountsReceivable/Search.aspx, tab All, 36 invoices, 25 per page): the strip above the table and the pager below it, captured on the demo company on 17 October 2026 and reduced to what the extension uses. Xero's pickers load the page their change handler builds; here the handlers write it on <html data-bt-navigated> instead -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Xero | Invoices | Demo Company (Global)</title>
+</head>
+<body>
+  <form id="frmMain" class="body-form">
+    <div class="document collection forms invoices">
+      <div class="bridge-lower">
+        <div class="action-bar">
+          <div></div>
+          <div class="small thin right skip searchbutton button">Search</div>
+          <span class="total">36 items</span>
+        </div>
+        <table class="standard">
+          <tbody>
+            <tr><td>INV-0035</td><td>Boom FM</td><td>Draft</td></tr>
+            <tr><td>INV-0028</td><td>Bayside Club</td><td>Awaiting Payment</td></tr>
+          </tbody>
+        </table>
+        <div class="paginate">
+          <span>Page <select id="mainPagerGoToDropDown" name="mainPagerGoToDropDown" onchange="document.documentElement.dataset.btNavigated = 'page ' + this.value"><option value="1" selected>1</option><option value="2">2</option></select> of <em id="total-pages">2</em> <em>(<em id="total-paged-items">36</em> total items)</em></span>
+          <span><em>Showing <select id="mainPagerItemPerPageDropDown" name="mainPagerItemPerPageDropDown" onchange="document.documentElement.dataset.btNavigated = 'size ' + this.value"><option value="10">10</option><option value="25" selected>25</option><option value="50">50</option><option value="100">100</option><option value="200">200</option></select> items per page</em></span>
+          <ul>
+            <li class="selected"><a href="#">1</a></li>
+            <li><a href="/AccountsReceivable/Search.aspx?page=2&amp;PageSize=25">2</a></li>
+            <li><a href="/AccountsReceivable/Search.aspx?page=2&amp;PageSize=25">Next ›</a></li>
+            <li><a href="/AccountsReceivable/Search.aspx?page=2&amp;PageSize=25">End »</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </form>
+</body>
+</html>
