@@ -8,7 +8,7 @@ function asStoredObject(value: unknown): StoredObject {
   return Object(value)
 }
 
-function isApproveAction(value: unknown): value is ApproveAction {
+export function isApproveAction(value: unknown): value is ApproveAction {
   return APPROVE_ACTIONS.some((action) => action === value)
 }
 
