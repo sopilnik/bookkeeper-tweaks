@@ -1,6 +1,7 @@
 /* Feature 1: the dot that marks a relabelled Approve button, and Xero's shortcut tooltip when the chosen action has
    no shortcut; its notice is the shared one (shared/notice.css). Xero sizes every box border-box, so the dot sets
-   content-box: its white ring sits outside its size */
+   content-box: its white ring sits outside its size. The dot sits on the Approve button's top right corner, past Xero's
+   40 px menu trigger (measured on the demo company): 36 px from the group's right edge, its centre 3 px inside */
 .bt-approve-group {
   position: relative;
 }
@@ -8,7 +9,7 @@
 .bt-approve-dot {
   position: absolute;
   top: -4px;
-  right: 26px;
+  right: 36px;
   z-index: 1;
   box-sizing: content-box;
   width: 10px;
