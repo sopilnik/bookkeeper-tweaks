@@ -1,5 +1,6 @@
-// The extension's Print button before Xero's print group (sheet variant A1, see print.css): Xero's button look with
-// the extension's dot; while busy it keeps its width and shows a spinner in its label's place; after printing, a note
+// The extension's Print button before Xero's print group (sheet variant A1, see print.css): the classes and size of
+// Xero's Print PDF button, as read on the demo company, with the extension's dot; while busy it keeps its width and
+// shows a spinner in its label's place; after printing, a note
 // under it offers to open the PDF
 export interface PrintControl {
   element: HTMLElement
@@ -10,7 +11,7 @@ const CONTROL_TAG = 'span'
 const CONTROL_CLASS = 'bt-print'
 const BUSY_CLASS = 'bt-print--busy'
 const BUTTON_TAG = 'button'
-const BUTTON_CLASS = 'xui-button xui-button-standard bt-print__button'
+const BUTTON_CLASS = 'xui-button xui-button-standard xui-button-small bt-print__button'
 const BUTTON_TYPE = 'button'
 const BUTTON_TEXT = 'Print'
 const BUTTON_TITLE = 'Print the invoice without downloading its PDF'

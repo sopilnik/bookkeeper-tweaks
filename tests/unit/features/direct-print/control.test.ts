@@ -16,13 +16,13 @@ afterEach(() => {
 })
 
 describe('createPrintControl', () => {
-  it('builds a Print button in Xero\'s look, marked with the extension\'s dot', () => {
+  it('builds a Print button in the classes and size of Xero\'s Print PDF, marked with the extension\'s dot', () => {
     const { element, button } = createPrintControl(QUIET)
 
     expect(button.textContent).toBe('Print')
     expect(button.type).toBe('button')
     expect(button.title).toBe('Print the invoice without downloading its PDF')
-    expect(button.classList.contains('xui-button')).toBe(true)
+    expect([...button.classList]).toEqual(expect.arrayContaining(['xui-button', 'xui-button-standard', 'xui-button-small']))
     expect(element.querySelector(DOT_SELECTOR)).not.toBeNull()
   })
 

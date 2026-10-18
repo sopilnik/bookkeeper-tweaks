@@ -1,6 +1,6 @@
-/* Feature 2: the Print button before Xero's print group (sheet variant A1). Xero's header sets white-space: nowrap,
-   which the note sets back for itself; the busy state hides the label and draws a spinner in its place, so the button
-   keeps its width and nothing in Xero's row moves */
+/* Feature 2: the Print button before Xero's print group (sheet variant A1); its size comes from Xero's own button
+   classes. Xero's header sets white-space: nowrap, which the note sets back for itself; the busy state makes the label
+   transparent, so the button keeps its width, and draws a spinner in its place — nothing in Xero's row moves */
 .bt-print {
   position: relative;
   display: inline-flex;
@@ -9,8 +9,6 @@
 
 .bt-print__button {
   position: relative;
-  min-width: 64px;
-  justify-content: center;
 }
 
 .bt-print--busy .bt-print__button {
