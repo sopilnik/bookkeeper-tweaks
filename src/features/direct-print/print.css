@@ -1,0 +1,72 @@
+/* Feature 2: the Print button before Xero's print group (sheet variant A1). Xero's header sets white-space: nowrap,
+   which the note sets back for itself; the busy state hides the label and draws a spinner in its place, so the button
+   keeps its width and nothing in Xero's row moves */
+.bt-print {
+  position: relative;
+  display: inline-flex;
+  margin-right: 8px;
+}
+
+.bt-print__button {
+  position: relative;
+  min-width: 64px;
+  justify-content: center;
+}
+
+.bt-print--busy .bt-print__button {
+  color: transparent;
+}
+
+.bt-print--busy .bt-print__button::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 12px;
+  height: 12px;
+  margin: -8px 0 0 -8px;
+  border: 2px solid #c1c7cd;
+  border-top-color: #0078c8;
+  border-radius: 50%;
+  animation: bt-print-spin 0.8s linear infinite;
+}
+
+@keyframes bt-print-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* The dot of feature 1: what the extension adds */
+.bt-print__dot {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  z-index: 1;
+  width: 10px;
+  height: 10px;
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  background: #1f7a5c;
+  pointer-events: none;
+}
+
+.bt-print__note {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  z-index: 2;
+  padding: 6px 10px;
+  border: 1px solid #d4d8dc;
+  border-radius: 4px;
+  background: #ffffff;
+  color: #1e3145;
+  font: 12px/1.4 system-ui, sans-serif;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 0.2);
+}
+
+.bt-print__open {
+  color: #0078c8;
+  font-weight: 600;
+}
