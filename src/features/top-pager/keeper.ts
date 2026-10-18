@@ -24,13 +24,9 @@ function focusedLabel(bar: HTMLElement | null): string | null {
   return bar && focused && bar.contains(focused) ? focused.getAttribute(LABEL_ATTRIBUTE) : null
 }
 
-// Gives the focus to the fresh bar's control with the label, without scrolling the window
-function focusLabelled(bar: HTMLElement, label: string | null): void {
-  if (label === null) {
-    return
-  }
-
-  bar.querySelector<HTMLElement>(LABELLED_SELECTOR(label))?.focus({ preventScroll: true })
+// The fresh bar's control with the label; null without a label or when the fresh bar has no such control
+function labelledControl(bar: HTMLElement, label: string | null): HTMLElement | null {
+  return label === null ? null : bar.querySelector<HTMLElement>(LABELLED_SELECTOR(label))
 }
 
 // Keeps a bar above the list in step with Xero's pager under root: drawn while the pager shows more than one page,
@@ -46,7 +42,8 @@ export function keepTopPager(root: Node, adapter: PagerAdapter): () => void {
   }
   const draw = (state: PagerState): void => {
     const fresh = createBar(state, adapter.actions, adapter.look)
-    const focused = focusedLabel(bar)
+    const label = focusedLabel(bar)
+    const focused = labelledControl(fresh, label)
 
     if (!adapter.place(fresh)) {
       remove()
@@ -57,7 +54,7 @@ export function keepTopPager(root: Node, adapter: PagerAdapter): () => void {
     bar?.remove()
     bar = fresh
     shownKey = stateKey(state)
-    focusLabelled(fresh, focused)
+    focused?.focus({ preventScroll: true })
   }
   const refresh = (): void => {
     const state = adapter.readState()
