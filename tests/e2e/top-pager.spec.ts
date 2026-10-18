@@ -1,9 +1,9 @@
 import type { Page } from '@playwright/test'
 import { installBillsStub } from './bills-stub'
 import { installExtStub } from './ext-stub'
-import { EXTENSION_ID, expect, test } from './extension'
+import { expect, test } from './extension'
+import { openWithSwitchOff } from './settings-switch'
 
-const SETTINGS_URL = `chrome-extension://${EXTENSION_ID}/settings.html`
 const CLASSIC_URL = 'https://go.xero.com/AccountsReceivable/Search.aspx'
 const RECODE_URL = 'https://go.xero.com/Accounts/Recoding/Recode'
 const BILLS_URL = 'https://go.xero.com/app/!demo0/bills/list/all'
@@ -20,9 +20,6 @@ const RECODE_PLACE = '.x-toolbar.results-toolbar > nav.bt-pager:last-child'
 const BILLS_PLACE = '.xui-u-flex-justify-end > nav.bt-pager'
 const PICKING_SELECTOR = 'html.bt-picking'
 const FEATURE_SWITCH_LABEL = 'Top pager'
-const VISIBLE_MARK_SELECTOR = '.bt-saved:not([hidden])'
-const ACTIVE_MESSAGE = 'Bookkeeper Tweaks: active'
-const CONSOLE_EVENT = 'console'
 const SECOND_PAGE = '2'
 const THIRD_PAGE = '3'
 const SMALLER_SIZE = '25'
@@ -86,16 +83,7 @@ test.describe('Top pager on the classic invoice list', () => {
   })
 
   test('stays away while its switch is off', async ({ page }) => {
-    await page.goto(SETTINGS_URL)
-    await page.getByLabel(FEATURE_SWITCH_LABEL).click()
-
-    await expect(page.locator(VISIBLE_MARK_SELECTOR)).toHaveText('Saved')
-
-    const active = page.waitForEvent(CONSOLE_EVENT, (message) => message.text() === ACTIVE_MESSAGE)
-
-    await page.goto(CLASSIC_URL)
-
-    await active
+    await openWithSwitchOff(page, FEATURE_SWITCH_LABEL, CLASSIC_URL)
 
     await expect(bar(page)).toHaveCount(0)
   })

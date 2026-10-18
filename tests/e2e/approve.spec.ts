@@ -1,9 +1,9 @@
 import type { Page } from '@playwright/test'
 import { APPROVE_ACTIONS } from '../../src/settings/schema'
-import { EXTENSION_ID, expect, test } from './extension'
+import { expect, test } from './extension'
+import { changeSetting } from './settings-switch'
 import { installXuiStub } from './xui-stub'
 
-const SETTINGS_URL = `chrome-extension://${EXTENSION_ID}/settings.html`
 const EDITOR_URL = 'https://go.xero.com/app/!demo0/invoicing/edit/00000000-0000-0000-0000-000000000000'
 const EDITOR_PATH = '/app/!demo0/invoicing/edit/00000000-0000-0000-0000-000000000000'
 const OTHER_PATH = '/app/!demo0/sales/overview'
@@ -13,7 +13,6 @@ const NOTICE_SELECTOR = '.bt-notice'
 const PERFORMED_ATTRIBUTE = 'data-bt-performed'
 const TITLE_ATTRIBUTE = 'title'
 const PAGE_ROOT_SELECTOR = 'html'
-const VISIBLE_MARK_SELECTOR = '.bt-saved:not([hidden])'
 const DRAFT_ONLY = 'approve-and-view-next'
 const FEATURE_SWITCH_LABEL = 'Approve default'
 const DRAFT_ONLY_LABEL = 'Approve & view next'
@@ -28,12 +27,6 @@ const XERO_HEADER_STYLE = '.ApproveAndEmailButton { white-space: nowrap } *, *::
 async function openEditor(page: Page, actions: readonly string[]): Promise<void> {
   await page.addInitScript(installXuiStub, actions)
   await page.goto(EDITOR_URL)
-}
-
-async function changeSetting(page: Page, label: string): Promise<void> {
-  await page.goto(SETTINGS_URL)
-  await page.getByLabel(label).click()
-  await expect(page.locator(VISIBLE_MARK_SELECTOR)).toHaveText('Saved')
 }
 
 // Chooses an action a submitted invoice's menu lacks and clicks Approve on one, so the click ends in the notice
