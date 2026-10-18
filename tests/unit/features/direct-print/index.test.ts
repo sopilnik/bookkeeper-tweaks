@@ -193,4 +193,16 @@ describe('a click on Print', () => {
     expect(control.querySelector(NOTICE_SELECTOR)).toBeNull()
     expect(fakes.printInFrame).not.toHaveBeenCalled()
   })
+
+  it('prints nothing when the PDF arrives after the feature stopped', async () => {
+    stop = activateDirectPrint(document.body, VIEW_PATH, true)
+
+    queryRequired<HTMLButtonElement>(document, BUTTON_SELECTOR).click()
+    stop()
+    await settle()
+
+    expect(fakes.printInFrame).not.toHaveBeenCalled()
+    expect(URL.createObjectURL).not.toHaveBeenCalled()
+    expect(document.querySelector(NOTE_SELECTOR)).toBeNull()
+  })
 })

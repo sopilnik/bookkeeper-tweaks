@@ -54,8 +54,9 @@ function presentPdf(control: PrintControl, pdf: Blob): () => void {
   return remove
 }
 
-// One click: the button is busy while the PDF loads; then the PDF prints, or a notice says it could not load — not when
-// the load was stopped with the feature. Gives the function that removes what the click left on the page
+// One click: the button is busy while the PDF loads; then the PDF prints, or a notice says it could not load — neither
+// once the feature has stopped, even when the PDF arrived just before. Gives the function that removes what the click
+// left on the page
 async function printOnce(job: PrintJob): Promise<() => void> {
   setBusy(job.control, true)
 
@@ -63,12 +64,12 @@ async function printOnce(job: PrintJob): Promise<() => void> {
 
   setBusy(job.control, false)
 
-  if (pdf) {
-    return presentPdf(job.control, pdf)
-  }
-
   if (job.signal.aborted) {
     return NOTHING_TO_UNDO
+  }
+
+  if (pdf) {
+    return presentPdf(job.control, pdf)
   }
 
   return showNotice(job.control.element, FAILURE_MESSAGE)
