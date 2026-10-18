@@ -1,5 +1,6 @@
 import { activateApproveDefault } from '../features/approve-default'
 import { isInvoiceEditorRoute } from '../features/approve-default/route'
+import { activateDirectPrint } from '../features/direct-print'
 import { activateTopPager } from '../features/top-pager'
 import type { Settings } from '../settings/schema'
 import { loadSettings } from '../settings/storage'
@@ -20,7 +21,11 @@ function activateApprove(pathname: string, settings: Settings): () => void {
 
 // Every feature of the new app on the page at the path; the returned function deactivates them all
 function activateFor(pathname: string, settings: Settings): () => void {
-  const deactivations = [activateApprove(pathname, settings), activateTopPager(document.body, pathname, settings.topPager.enabled)]
+  const deactivations = [
+    activateApprove(pathname, settings),
+    activateDirectPrint(document.body, pathname, settings.directPrint.enabled),
+    activateTopPager(document.body, pathname, settings.topPager.enabled),
+  ]
 
   return () => {
     deactivations.forEach((deactivate) => {
