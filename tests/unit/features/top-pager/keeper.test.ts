@@ -79,6 +79,16 @@ describe('keepTopPager', () => {
     expect(shownPage()).toBe('2')
   })
 
+  it('keeps the focus on the same control when it draws the bar again', async () => {
+    stop = keepTopPager(document.body, ADAPTER)
+
+    queryRequired<HTMLSelectElement>(document, PAGE_PICKER).focus()
+    await changeList(SECOND_OF_TWO)
+
+    expect(document.activeElement).toBe(queryRequired(document, PAGE_PICKER))
+    expect(shownPage()).toBe('2')
+  })
+
   it('keeps the same bar while the pager stays as it is', async () => {
     stop = keepTopPager(document.body, ADAPTER)
 

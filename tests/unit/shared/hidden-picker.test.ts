@@ -21,6 +21,10 @@ const TRIGGER_TAG = 'button'
 const CLICK_EVENT = 'click'
 const PICKING_CLASS = 'bt-picking'
 const OPTION_TIMEOUT_MS = 1000
+const FIELD_TAG = 'input'
+const OWN_CONTROL_TAG = 'select'
+// Where the picker's field sits, below the window's first screen
+const FIELD_TOP = 600
 
 function isOpen(): boolean {
   return document.querySelector(LIST_SELECTOR) !== null
@@ -36,10 +40,17 @@ function openList(optionHtml: string): HTMLElement {
   return list
 }
 
-// A trigger that opens and closes a list the way Xero's does; the option records whether the list was hidden when the
-// option was clicked
+// Focuses the picker's own field and scrolls the window to it, as Ext's combos do whenever their trigger is clicked
+function focusField(field: HTMLElement): void {
+  field.focus()
+  window.scrollTo(0, FIELD_TOP)
+}
+
+// A trigger that opens and closes a list the way Xero's does, focusing the picker's field on every click; the option
+// records whether the list was hidden when the option was clicked
 function fakePicker(optionHtml: string): FakePicker {
   const trigger = document.createElement(TRIGGER_TAG)
+  const field = document.createElement(FIELD_TAG)
   let picked = false
   let hiddenWhilePicked = false
   const recordPick = (): void => {
@@ -50,6 +61,8 @@ function fakePicker(optionHtml: string): FakePicker {
   trigger.addEventListener(CLICK_EVENT, () => {
     const open = document.querySelector(LIST_SELECTOR)
 
+    focusField(field)
+
     if (open) {
       open.remove()
 
@@ -59,9 +72,25 @@ function fakePicker(optionHtml: string): FakePicker {
     openList(optionHtml).querySelector(OPTION_BODY_SELECTOR)?.addEventListener(CLICK_EVENT, recordPick)
   })
 
-  document.body.append(trigger)
+  document.body.append(trigger, field)
 
   return { trigger, picked: () => picked, hiddenWhilePicked: () => hiddenWhilePicked }
+}
+
+// The bar's own control, focused with the window at its top, as when the user picks in it
+function focusOwnControl(): HTMLElement {
+  const own = document.createElement(OWN_CONTROL_TAG)
+
+  document.body.append(own)
+  own.focus()
+  window.scrollTo(0, 0)
+
+  return own
+}
+
+function expectViewAt(own: HTMLElement): void {
+  expect(document.activeElement).toBe(own)
+  expect(window.scrollY).toBe(0)
 }
 
 function pickWith(trigger: HTMLButtonElement, signal = new AbortController().signal): Promise<boolean> {
@@ -121,6 +150,25 @@ describe('pickHidden', () => {
 
     expect(await picking).toBe(false)
     expect(isOpen()).toBe(false)
+  })
+
+  it('leaves the focus and the window where the pick found them', async () => {
+    const picker = fakePicker(OPTION_HTML)
+    const own = focusOwnControl()
+
+    expect(await pickWith(picker.trigger)).toBe(true)
+    expectViewAt(own)
+  })
+
+  it('leaves them there when the option never comes', async () => {
+    const picker = fakePicker(NO_OPTION)
+    const own = focusOwnControl()
+    const picking = pickWith(picker.trigger)
+
+    await vi.advanceTimersByTimeAsync(OPTION_TIMEOUT_MS)
+
+    expect(await picking).toBe(false)
+    expectViewAt(own)
   })
 
   it('treats an option with nothing to click as missing', async () => {

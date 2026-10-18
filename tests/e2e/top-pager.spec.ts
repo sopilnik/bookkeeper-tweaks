@@ -30,9 +30,30 @@ const BIGGER_SIZE = '50'
 const PICKER_ROLE = 'combobox'
 const BUTTON_ROLE = 'button'
 const NARROW_WINDOW = { width: 600, height: 800 }
+// Short enough that Ext's paging toolbar under the results lies below the window's first screen
+const SHORT_WINDOW = { width: 1280, height: 400 }
+const SCROLLED_TOP = 150
+const EXT_NEXT_SELECTOR = '.x-toolbar.x-paging .next-button a.x-btn-button'
 
 function bar(page: Page): ReturnType<Page['locator']> {
   return page.locator(BAR_SELECTOR)
+}
+
+// The bar's page picker, focused in the short window
+async function focusPagePicker(page: Page): Promise<ReturnType<Page['locator']>> {
+  const picker = bar(page).getByRole(PICKER_ROLE, PAGE_PICKER)
+
+  await page.setViewportSize(SHORT_WINDOW)
+  await picker.focus()
+
+  return picker
+}
+
+// Runs in the page: scrolls the window away from the bar, then Ext shows the next page by its own Next, as when its load
+// ends after the user has scrolled
+function scrollAndStepInExt(step: { selector: string, top: number }): void {
+  window.scrollTo(0, step.top)
+  document.querySelector<HTMLElement>(step.selector)?.click()
 }
 
 async function expectHiddenInNarrowWindow(page: Page, place: string): Promise<void> {
@@ -99,6 +120,26 @@ test.describe('Top pager on Find and recode', () => {
 
   test('hides itself in a narrow window, where it would cover Ext\'s toolbar', async ({ page }) => {
     await expectHiddenInNarrowWindow(page, RECODE_PLACE)
+  })
+
+  test('leaves the window at the top and the focus on its picker after a pick', async ({ page }) => {
+    const picker = await focusPagePicker(page)
+
+    await picker.selectOption(SECOND_PAGE)
+
+    await expect(page.locator(PAGE_ROOT_SELECTOR)).toHaveAttribute(PERFORMED_ATTRIBUTE, 'page 2')
+    expect(await page.evaluate(() => window.scrollY)).toBe(0)
+    await expect(picker).toBeFocused()
+  })
+
+  test('keeps the focus on its picker without moving the window when Ext shows another page', async ({ page }) => {
+    const picker = await focusPagePicker(page)
+
+    await page.evaluate(scrollAndStepInExt, { selector: EXT_NEXT_SELECTOR, top: SCROLLED_TOP })
+
+    await expect(page.locator(PAGE_ROOT_SELECTOR)).toHaveAttribute(PERFORMED_ATTRIBUTE, 'next')
+    await expect(picker).toBeFocused()
+    expect(await page.evaluate(() => window.scrollY)).toBe(SCROLLED_TOP)
   })
 
   test('clicks Ext\'s own Next and picks the size', async ({ page }) => {

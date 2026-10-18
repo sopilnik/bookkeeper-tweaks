@@ -1,5 +1,6 @@
 // Stands in for Ext JS on the Find and recode fixture: a combo's trigger opens and closes its list in <body> (id: the
-// combo's id plus "-boundlist"), an item sets the combo, Prev and Next step the page. Every action Xero would perform
+// combo's id plus "-boundlist"), an item sets the combo, Prev and Next step the page. Like Ext 4.2, the trigger and the
+// item focus the combo's field, and the browser scrolls it into view. Every action Xero would perform
 // is appended to data-bt-performed on <html>, and the total is written again after each one, as Ext redraws the
 // results. Self-contained, because Playwright serializes it into the page; unit tests call it directly and remove it
 // with the returned function
@@ -67,6 +68,8 @@ export function installExtStub(): () => void {
       return
     }
 
+    combo.querySelector<HTMLInputElement>(INPUT_SELECTOR)?.focus()
+
     if (existing && existing.style.display !== HIDDEN) {
       existing.style.display = HIDDEN
 
@@ -91,6 +94,7 @@ export function installExtStub(): () => void {
     }
 
     input.value = item.textContent ?? ''
+    input.focus()
     list.style.display = HIDDEN
     perform(combo.classList.contains(SIZE_COMBO_CLASS) ? SIZE_ACTION(number) : PAGE_ACTION(number))
     redraw()
