@@ -1,24 +1,24 @@
 // Stands in for Xero's pager on the Bills fixture: the items-per-page select and the page select open and close their
-// lists in the portal, an option and Prev or Next change the page, and after each change the row above the table is
-// drawn anew, as React does. Every action Xero would perform is appended to data-bt-performed on <html>.
-// Self-contained, because Playwright serializes it into the page; unit tests call it directly and remove it with the
-// returned function
+// lists in the portal, under the ids the fixture's triggers name; an option and Prev or Next change the page, and
+// after each change the row above the table is drawn anew, as React does. Every action Xero would perform is appended
+// to data-bt-performed on <html>. Self-contained, because Playwright serializes it into the page; unit tests call it
+// directly and remove it with the returned function
 export function installBillsStub(): () => void {
   const SIZE_TRIGGER_SELECTOR = '[role="combobox"].xui-single-select__trigger'
   const PAGE_BUTTON_SELECTOR = '.xui-select--button'
   const PAGE_CONTENT_SELECTOR = '.xui-select--content'
   const PREVIOUS_SELECTOR = 'button[aria-label="Previous Page"]'
   const NEXT_SELECTOR = 'button[aria-label="Next Page"]'
-  const SIZE_OPTION_SELECTOR = '.xui-single-select__flyout [role="option"]'
-  const PAGE_OPTION_SELECTOR = '.xui-picklist [role="option"]'
-  const SIZE_LIST_SELECTOR = '.xui-single-select__flyout'
-  const PAGE_LIST_SELECTOR = '.xui-dropdown-layout'
+  const SIZE_OPTION_SELECTOR = '#xui-sizes [role="option"]'
+  const PAGE_OPTION_SELECTOR = '#xui-pages [role="option"]'
+  const SIZE_LIST_SELECTOR = '#xui-sizes'
+  const PAGE_LIST_SELECTOR = '#xui-pages'
   const PORTAL_SELECTOR = '.xui-portal .xui-container'
   const ROW_SELECTOR = '.bills-list-content-container > .xui-padding-xsmall:not(.xui-panel--section)'
   const ROW_HTML = '<div class="xui-u-flex-justify-end xui-u-flex-align-center">37 items | 8,386.76 USD</div>'
-  const SIZE_LIST_HTML = '<div class="xui-single-select__flyout" role="listbox">' +
+  const SIZE_LIST_HTML = '<div id="xui-sizes" class="xui-single-select__flyout" role="listbox">' +
     [10, 25, 50, 100, 200].map((size) => `<div role="option" id="${size}" class="xui-single-select__option">${size}</div>`).join('') + '</div>'
-  const PAGE_LIST_HTML = (pages: number): string => '<div class="xui-dropdown-layout"><ul class="xui-picklist" role="listbox">' +
+  const PAGE_LIST_HTML = (pages: number): string => '<div id="xui-pages" class="xui-dropdown-layout"><ul class="xui-picklist" role="listbox">' +
     Array.from({ length: pages }, (_, index) => `<li role="option" class="xui-pickitem">${index + 1}</li>`).join('') + '</ul></div>'
   const PAGE_TEXT = (page: number, pages: number): string => `Page ${page} of ${pages}`
   const SIZE_ACTION = (size: string): string => `size ${size}`

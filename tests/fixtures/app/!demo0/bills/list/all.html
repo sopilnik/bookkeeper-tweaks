@@ -1,4 +1,4 @@
-<!-- The Bills list of the new app (/app/!demo0/bills/list/all?pageSize=10&pageNumber=1, 37 bills, 4 pages): the row above the table and the pager below it, captured on the demo company on 17 October 2026 and reduced to what the extension uses. Tests add a stand-in for the parts of Xero's pager the extension drives (tests/e2e/bills-stub.ts) -->
+<!-- The Bills list of the new app (/app/!demo0/bills/list/all?pageSize=10&pageNumber=1, 37 bills, 4 pages): the row above the table and the pager below it, captured on the demo company on 17 October 2026 and reduced to what the extension uses; the two selects name their lists as Xero does (read on 18 October 2026: the page button xui-<id>-control opens xui-<id>, the size trigger names its list in aria-controls). Tests add a stand-in for the parts of Xero's pager the extension drives (tests/e2e/bills-stub.ts) -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -18,7 +18,7 @@
         <div class="xui-pagination--items">
           <div class="xui-pagination--items--select">
             <span id="xui-items-label">Items per page</span>
-            <div role="combobox" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="xui-items-label" class="xui-single-select__trigger xui-single-select__trigger--small"><span class="xui-single-select__trigger-content">10</span></div>
+            <div role="combobox" aria-haspopup="listbox" aria-expanded="false" aria-controls="xui-sizes" aria-labelledby="xui-items-label" class="xui-single-select__trigger xui-single-select__trigger--small"><span class="xui-single-select__trigger-content">10</span></div>
           </div>
           <div class="xui-pagination--items--count">Showing items 1-10 of 37</div>
         </div>
@@ -26,7 +26,7 @@
           <button disabled class="xui-button xui-button-icon-small xui-button-icon xui-button-is-disabled" type="button" aria-label="Previous Page"><div class="xui-touchtarget"></div></button>
           <div class="xui-select">
             <span class="xui-text-label xui-text-label--hidden">Select a page</span>
-            <div class="xui-dropdown--toggledwrapper"><button class="xui-button xui-select--button xui-button-borderless-main xui-button-sm" type="button" aria-haspopup="listbox"><span class="xui-select--content">Page 1 of 4</span><div class="xui-button--caret xui-select--caret"></div></button></div>
+            <div class="xui-dropdown--toggledwrapper"><button id="xui-pages-control" class="xui-button xui-select--button xui-button-borderless-main xui-button-sm" type="button" aria-haspopup="listbox"><span class="xui-select--content">Page 1 of 4</span><div class="xui-button--caret xui-select--caret"></div></button></div>
           </div>
           <button class="xui-button xui-button-icon-small xui-button-icon" type="button" aria-label="Next Page"><div class="xui-touchtarget"></div></button>
         </div>

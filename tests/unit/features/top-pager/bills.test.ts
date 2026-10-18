@@ -17,6 +17,18 @@ const TWO_PAGES_TEXT = 'Page 1 of 2'
 const BAR_TAG = 'nav'
 const CHANGE_EVENT = 'change'
 const OPEN_LISTS = '.xui-dropdown-layout, .xui-single-select__flyout'
+const PORTAL = '.xui-portal .xui-container'
+const OTHER_LIST = '[data-other]'
+// Another of Xero's lists open in the portal, as the "New bill" menu of the Bills page is: its options look like the
+// page select's and the size select's own
+const OTHER_MENU_HTML = '<div data-other class="xui-dropdown-layout"><ul class="xui-picklist" role="listbox">' +
+  '<li role="option">Upload bills</li><li role="option">New bill</li><li role="option">New repeating bill</li></ul></div>'
+const OTHER_SIZES_HTML = '<div data-other class="xui-single-select__flyout" role="listbox"><div role="option" id="25">25</div></div>'
+const AT_END: InsertPosition = 'beforeend'
+const CLICK_EVENT = 'click'
+const CLICKED = 'true'
+const ID_ATTRIBUTE = 'id'
+const CONTROLS_ATTRIBUTE = 'aria-controls'
 const EXPANDED_ATTRIBUTE = 'aria-expanded'
 const SECOND_PAGE_VALUE = '2'
 const THIRD_PAGE = 3
@@ -29,6 +41,21 @@ function nextTask(): Promise<void> {
   return new Promise((resolve) => {
     setTimeout(resolve, 0)
   })
+}
+
+// Opens another of Xero's lists in the portal; it marks itself when one of its options is clicked
+function openOtherList(html: string): HTMLElement {
+  const portal = queryRequired(document, PORTAL)
+
+  portal.insertAdjacentHTML(AT_END, html)
+
+  const list = queryRequired<HTMLElement>(portal, OTHER_LIST)
+
+  list.addEventListener(CLICK_EVENT, () => {
+    list.dataset.clicked = CLICKED
+  })
+
+  return list
 }
 
 beforeEach(async () => {
@@ -74,6 +101,28 @@ describe('billsActions', () => {
     expect(queryRequired(document, SIZE_TRIGGER).getAttribute(EXPANDED_ATTRIBUTE)).toBe('false')
   })
 
+  it('picks the page only in the page select\'s own list while another of Xero\'s menus is open', async () => {
+    const actions = billsActions(document, controller.signal)
+    const otherMenu = openOtherList(OTHER_MENU_HTML)
+
+    actions.goToPage(THIRD_PAGE)
+    await nextTask()
+
+    expect(otherMenu.dataset.clicked).toBeUndefined()
+    expect(performed()).toBe('page 3')
+  })
+
+  it('picks the size only in the size select\'s own list while another of Xero\'s lists is open', async () => {
+    const actions = billsActions(document, controller.signal)
+    const otherSizes = openOtherList(OTHER_SIZES_HTML)
+
+    actions.setPageSize(SMALLER_SIZE)
+    await nextTask()
+
+    expect(otherSizes.dataset.clicked).toBeUndefined()
+    expect(performed()).toBe('size 25')
+  })
+
   it('clicks Xero\'s own arrows', () => {
     const actions = billsActions(document, controller.signal)
 
@@ -92,6 +141,19 @@ describe('billsActions', () => {
     actions.setPageSize(SMALLER_SIZE)
 
     expect(performed()).toBeUndefined()
+  })
+
+  it('does nothing when Xero\'s selects name no list of their own', async () => {
+    const actions = billsActions(document, controller.signal)
+
+    queryRequired(document, PAGE_BUTTON).removeAttribute(ID_ATTRIBUTE)
+    queryRequired(document, SIZE_TRIGGER).removeAttribute(CONTROLS_ATTRIBUTE)
+    actions.goToPage(THIRD_PAGE)
+    actions.setPageSize(SMALLER_SIZE)
+    await nextTask()
+
+    expect(performed()).toBeUndefined()
+    expect(document.querySelector(OPEN_LISTS)).toBeNull()
   })
 })
 

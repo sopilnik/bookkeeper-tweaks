@@ -16,9 +16,15 @@ const PAGE_BUTTON_SELECTOR = `${PAGING_SELECTOR} .xui-select--button`
 const PREVIOUS_SELECTOR = `${PAGING_SELECTOR} button[aria-label="Previous Page"]`
 const NEXT_SELECTOR = `${PAGING_SELECTOR} button[aria-label="Next Page"]`
 const PLACE_SELECTOR = `${CONTAINER_SELECTOR} > .xui-padding-xsmall:not(.xui-panel--section) > .xui-u-flex-justify-end`
-const PAGE_LIST_SELECTOR = '.xui-dropdown-layout .xui-picklist'
-const PAGE_OPTION_SELECTOR = (page: number): string => `${PAGE_LIST_SELECTOR} [role="option"]:nth-child(${page})`
-const SIZE_OPTION_SELECTOR = (size: number): string => `.xui-single-select__flyout [role="option"][id="${size}"]`
+// Each select's own list, as read on the demo company: the page button xui-<id>-control opens the list xui-<id>, and
+// the size trigger names its list in aria-controls. An option is looked for in that list only, so another of Xero's
+// menus open at the time (the "New bill" menu has options of the same shape) is never pressed
+const PAGE_BUTTON_ID_END = /-control$/
+const CONTROLS_ATTRIBUTE = 'aria-controls'
+const PAGE_OPTION_SELECTOR = (listId: string, page: number): string =>
+  `#${CSS.escape(listId)} .xui-picklist [role="option"]:nth-child(${page})`
+const SIZE_OPTION_SELECTOR = (listId: string, size: number): string =>
+  `#${CSS.escape(listId)} [role="option"][id="${size}"]`
 const EXPANDED_ATTRIBUTE = 'aria-expanded'
 const EXPANDED = 'true'
 // The sizes the list offers (read on the demo company; the list exists only while it is open)
@@ -37,26 +43,41 @@ export function readBillsState(root: ParentNode): PagerState | null {
   return { ...position, pageSize, pageSizes: PAGE_SIZES, canPickPage: root.querySelector(PAGE_BUTTON_SELECTOR) !== null }
 }
 
-function isPageListOpen(): boolean {
-  return document.querySelector(PAGE_LIST_SELECTOR) !== null
+function isListOpen(listId: string): boolean {
+  return document.getElementById(listId) !== null
+}
+
+// The id of the list the page button opens; null for a button Xero named otherwise
+function pageListIdOf(button: HTMLElement): string | null {
+  return PAGE_BUTTON_ID_END.test(button.id) ? button.id.replace(PAGE_BUTTON_ID_END, '') : null
 }
 
 function isExpanded(trigger: Element): boolean {
   return trigger.getAttribute(EXPANDED_ATTRIBUTE) === EXPANDED
 }
 
-// The pick of the page in Xero's page select; null when the list shows no page select
+// The pick of the page in Xero's page select; null when the list shows no page select or the select names no list
 function pagePick(root: ParentNode, page: number, signal: AbortSignal): HiddenPick | null {
   const trigger = root.querySelector<HTMLElement>(PAGE_BUTTON_SELECTOR)
+  const listId = trigger ? pageListIdOf(trigger) : null
 
-  return trigger ? { trigger, optionSelector: PAGE_OPTION_SELECTOR(page), isOpen: isPageListOpen, signal } : null
+  if (!trigger || listId === null) {
+    return null
+  }
+
+  return { trigger, optionSelector: PAGE_OPTION_SELECTOR(listId, page), isOpen: () => isListOpen(listId), signal }
 }
 
-// The pick of the size in Xero's items-per-page select; null without the select
+// The pick of the size in Xero's items-per-page select; null without the select or when it names no list
 function sizePick(root: ParentNode, size: number, signal: AbortSignal): HiddenPick | null {
   const trigger = root.querySelector<HTMLElement>(SIZE_TRIGGER_SELECTOR)
+  const listId = trigger?.getAttribute(CONTROLS_ATTRIBUTE) ?? null
 
-  return trigger ? { trigger, optionSelector: SIZE_OPTION_SELECTOR(size), isOpen: () => isExpanded(trigger), signal } : null
+  if (!trigger || listId === null) {
+    return null
+  }
+
+  return { trigger, optionSelector: SIZE_OPTION_SELECTOR(listId, size), isOpen: () => isExpanded(trigger), signal }
 }
 
 // The bar's pickers choose in Xero's selects; Prev and Next click Xero's own arrows
