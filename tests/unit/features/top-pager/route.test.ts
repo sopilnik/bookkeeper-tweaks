@@ -7,15 +7,15 @@ const LISTS: [string, PagerKind][] = [
   ['/AccountsReceivable/Search.aspx', 'classic'],
   ['/accountsreceivable/search.aspx', 'classic'],
   ['/Accounts/Recoding/Recode', 'recode'],
-  ['/app/!tmGS8/bills/list/all', 'bills'],
-  ['/app/!tmGS8/bills/list', 'bills'],
-  ['/app/!tmGS8/Bills/List/awaiting-payment', 'bills'],
+  ['/app/!demo0/bills/list/all', 'bills'],
+  ['/app/!demo0/bills/list', 'bills'],
+  ['/app/!demo0/Bills/List/awaiting-payment', 'bills'],
 ]
 const OTHER_PAGES = [
   '/Accounts/Recoding',
   '/AccountsReceivable/SearchRepeating.aspx',
-  '/app/!tmGS8/bills/listing',
-  '/app/!tmGS8/contacts/customers',
+  '/app/!demo0/bills/listing',
+  '/app/!demo0/contacts/customers',
 ]
 
 describe('pagerKindOf', () => {
