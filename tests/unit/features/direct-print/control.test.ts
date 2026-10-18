@@ -22,7 +22,9 @@ describe('createPrintControl', () => {
     expect(button.textContent).toBe('Print')
     expect(button.type).toBe('button')
     expect(button.title).toBe('Print the invoice without downloading its PDF')
-    expect([...button.classList]).toEqual(expect.arrayContaining(['xui-button', 'xui-button-standard', 'xui-button-small']))
+    expect([...button.classList]).toEqual(
+      expect.arrayContaining(['xui-button', 'xui-button-standard', 'xui-button-small']),
+    )
     expect(element.querySelector(DOT_SELECTOR)).not.toBeNull()
   })
 

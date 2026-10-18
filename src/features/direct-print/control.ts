@@ -1,7 +1,6 @@
 // The extension's Print button before Xero's print group (sheet variant A1, see print.css): the classes and size of
 // Xero's Print PDF button, as read on the demo company, with the extension's dot; while busy it keeps its width and
-// shows a spinner in its label's place; after printing, a note
-// under it offers to open the PDF
+// shows a spinner in its label's place; after printing, a note under it offers to open the PDF
 export interface PrintControl {
   element: HTMLElement
   button: HTMLButtonElement
