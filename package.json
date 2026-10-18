@@ -19,7 +19,8 @@
     "lint": "eslint --max-warnings 0 scripts src tests *.js *.ts",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "test:e2e": "pnpm build && playwright test"
+    "test:e2e": "pnpm build && playwright test",
+    "zip": "node scripts/zip.ts"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",

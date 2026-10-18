@@ -34,7 +34,7 @@ are on after install.
 
 ## Build and test
 
-Needs Node 26 and pnpm 12.
+Needs Node 26, pnpm 12 and the zip and unzip commands.
 
 ```sh
 pnpm install
@@ -43,6 +43,7 @@ pnpm lint
 pnpm typecheck
 pnpm test         # unit tests (Vitest)
 pnpm test:e2e     # the built extension in headless Chromium (Playwright)
+pnpm zip          # the store package in release/, without the development key
 ```
 
 To try it, open `chrome://extensions`, switch on Developer mode, choose "Load unpacked" and pick `dist/`.
