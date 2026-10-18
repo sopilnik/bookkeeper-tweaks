@@ -24,6 +24,7 @@ const SESSION = JSON.stringify({ access_token: 'header.payload.signature' })
 const PDF = new Blob(['%PDF-1.4'], { type: 'application/pdf' })
 const PDF_URL = 'blob:https://go.xero.com/11111111-1111-4111-8111-111111111111'
 const KEEP_MS = 60000
+const ABORT_EVENT = 'abort'
 const QUIET = (): void => {}
 let stop = (): void => {}
 
@@ -45,7 +46,7 @@ function redrawHeader(): void {
 // A load that ends, with no PDF, only when it is stopped
 function endOnAbort(_request: unknown, signal: AbortSignal): Promise<null> {
   return new Promise((resolve) => {
-    signal.addEventListener('abort', () => {
+    signal.addEventListener(ABORT_EVENT, () => {
       resolve(null)
     })
   })

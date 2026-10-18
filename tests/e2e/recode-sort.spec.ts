@@ -1,9 +1,9 @@
 import type { Page } from '@playwright/test'
 import { installExtStub } from './ext-stub'
 import { installExtStore } from './ext-store-stub'
-import { EXTENSION_ID, expect, test } from './extension'
+import { expect, test } from './extension'
+import { openWithSwitchOff } from './settings-switch'
 
-const SETTINGS_URL = `chrome-extension://${EXTENSION_ID}/settings.html`
 const RECODE_URL = 'https://go.xero.com/Accounts/Recoding/Recode'
 const ROWS_SELECTOR = '.x-grid-view tbody td'
 const PLACE_SELECTOR = '.x-toolbar.results-toolbar > button.bt-sort + nav.bt-pager'
@@ -12,9 +12,6 @@ const PAGER_SELECTOR = 'nav.bt-pager'
 const PAGE_ROOT_SELECTOR = 'html'
 const SENT_SORTERS_ATTRIBUTE = 'data-bt-sent-sorters'
 const FEATURE_SWITCH_LABEL = 'Recode sort'
-const VISIBLE_MARK_SELECTOR = '.bt-saved:not([hidden])'
-const ACTIVE_MESSAGE = 'Bookkeeper Tweaks: active'
-const CONSOLE_EVENT = 'console'
 const ASCENDING_LABEL = 'This page: Description A→Z'
 
 async function openResults(page: Page): Promise<void> {
@@ -80,16 +77,7 @@ test.describe('Recode sort', () => {
   })
 
   test('stays away while its switch is off', async ({ page }) => {
-    await page.goto(SETTINGS_URL)
-    await page.getByLabel(FEATURE_SWITCH_LABEL).click()
-
-    await expect(page.locator(VISIBLE_MARK_SELECTOR)).toHaveText('Saved')
-
-    const active = page.waitForEvent(CONSOLE_EVENT, (message) => message.text() === ACTIVE_MESSAGE)
-
-    await page.goto(RECODE_URL)
-
-    await active
+    await openWithSwitchOff(page, FEATURE_SWITCH_LABEL, RECODE_URL)
 
     await expect(page.locator(SORT_SELECTOR)).toHaveCount(0)
   })
