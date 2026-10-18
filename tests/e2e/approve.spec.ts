@@ -81,6 +81,15 @@ test.describe('Approve default', () => {
     expect(await page.locator(NOTICE_SELECTOR).evaluate(overflowOf)).toBe(0)
   })
 
+  test('keeps its dot at the size of the sheet under Xero\'s header', async ({ page }) => {
+    await openEditor(page, APPROVE_ACTIONS)
+    await page.addStyleTag({ content: XERO_HEADER_STYLE })
+
+    const dot = await page.locator(DOT_SELECTOR).boundingBox()
+
+    expect([dot?.width, dot?.height]).toEqual([14, 14])
+  })
+
   test('steps aside when the user leaves the invoice', async ({ page }) => {
     await openEditor(page, APPROVE_ACTIONS)
 

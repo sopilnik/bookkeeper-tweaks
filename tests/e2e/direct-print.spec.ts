@@ -12,6 +12,10 @@ const CONTROL_SELECTOR = '.bt-print'
 const PDF_FRAME_SELECTOR = 'iframe[src^="blob:"]'
 const NOTE_SELECTOR = '.bt-print__note'
 const NOTICE_SELECTOR = '.bt-notice'
+const BUTTON_SELECTOR = '.bt-print__button'
+const DOT_SELECTOR = '.bt-print__dot'
+// Xero sizes every box and pseudo-element border-box, as read on the demo company
+const XERO_BOX_SIZING = '*, *::before, *::after { box-sizing: border-box }'
 const PRINT_BUTTON = { name: 'Print', exact: true }
 const BUTTON_ROLE = 'button'
 const FEATURE_SWITCH_LABEL = 'Direct print'
@@ -21,6 +25,26 @@ function storeSession(session: string): void {
   const SESSION_KEY = 'oidc.user:https://identity.xero.com:xero_business_go'
 
   sessionStorage.setItem(SESSION_KEY, session)
+}
+
+// Puts the control in its busy state, as while a PDF loads; runs in the page
+function showBusy(control: Element): void {
+  const BUSY_CLASS = 'bt-print--busy'
+
+  control.classList.add(BUSY_CLASS)
+}
+
+// The busy spinner's outer size and how far its centre sits from its button's centre, across and down, in pixels:
+// it is placed at the button's middle and pulled back by its margins; runs in the page
+function spinnerOf(button: Element): number[] {
+  const CONTENT_BOX = 'content-box'
+  const HALF = 0.5
+  const spinner = getComputedStyle(button, '::after')
+  const border = parseFloat(spinner.borderTopWidth)
+  const width = parseFloat(spinner.width)
+  const size = spinner.boxSizing === CONTENT_BOX ? width + border + border : width
+
+  return [size, parseFloat(spinner.marginLeft) + size * HALF, parseFloat(spinner.marginTop) + size * HALF]
 }
 
 // Opens the invoice with a session in place; Xero's PDF answers as given
@@ -61,6 +85,23 @@ test.describe('Direct print', () => {
 
     await expect(page.locator(NOTICE_SELECTOR)).toHaveText('Could not load the PDF — use Print PDF.')
     await expect(page.locator(PDF_FRAME_SELECTOR)).toHaveCount(0)
+  })
+
+  test('keeps its busy spinner in the middle of the button under Xero\'s box sizing', async ({ page }) => {
+    await openInvoice(page, PDF_ANSWER)
+    await page.addStyleTag({ content: XERO_BOX_SIZING })
+    await page.locator(CONTROL_SELECTOR).evaluate(showBusy)
+
+    expect(await page.locator(BUTTON_SELECTOR).evaluate(spinnerOf)).toEqual([16, 0, 0])
+  })
+
+  test('keeps its dot at the size of the sheet under Xero\'s box sizing', async ({ page }) => {
+    await openInvoice(page, PDF_ANSWER)
+    await page.addStyleTag({ content: XERO_BOX_SIZING })
+
+    const dot = await page.locator(DOT_SELECTOR).boundingBox()
+
+    expect([dot?.width, dot?.height]).toEqual([14, 14])
   })
 
   test('stays away while its switch is off', async ({ page }) => {
