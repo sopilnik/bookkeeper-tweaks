@@ -115,7 +115,7 @@ describe('a click on Print', () => {
 
     const [request] = fakes.fetchPdf.mock.calls[0]
 
-    expect(request.url).toBe('/api/invoicing/invoice/00000000-0000-0000-0000-000000000000/pdf')
+    expect(request.url).toBe('https://go.xero.com/api/invoicing/invoice/00000000-0000-0000-0000-000000000000/pdf')
     expect(request.init.headers.Authorization).toBe('Bearer header.payload.signature')
     expect(request.init.headers['Xero-Tenant-Shortcode']).toBe('!demo0')
     expect(fakes.printInFrame).toHaveBeenCalledWith(PDF_URL)

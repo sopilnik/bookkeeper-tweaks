@@ -11,15 +11,19 @@ const ACCEPT_ANY = '*/*'
 const CLIENT_NAME = 'xero-secure-fetch'
 const APP_NAME = 'Invoicing'
 const WITH_COOKIES: RequestCredentials = 'include'
-const PDF_PATH = (invoiceId: string): string => `/api/invoicing/invoice/${invoiceId}/pdf`
+// The address is whole, never relative to the page, so no base URL in the page can send the token elsewhere; Xero
+// answers it without a redirect, and a redirect fails the request
+const PDF_URL = (invoiceId: string): string => `https://go.xero.com/api/invoicing/invoice/${invoiceId}/pdf`
+const NO_REDIRECT: RequestRedirect = 'error'
 const BEARER = (token: string): string => `Bearer ${token}`
 
 // Xero's own request for the invoice's PDF, made with the session's token and a fresh correlation id
 export function pdfRequestOf(view: InvoiceView, token: string, correlationId: string): PdfRequest {
   return {
-    url: PDF_PATH(view.invoiceId),
+    url: PDF_URL(view.invoiceId),
     init: {
       credentials: WITH_COOKIES,
+      redirect: NO_REDIRECT,
       headers: {
         Accept: ACCEPT_ANY,
         Authorization: BEARER(token),
