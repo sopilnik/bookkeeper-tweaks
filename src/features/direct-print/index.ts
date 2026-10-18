@@ -1,9 +1,10 @@
+import { keepPlaced } from '../../shared/keeper'
 import { showNotice } from '../../shared/notice'
 import type { PrintControl } from './control'
 import { createPrintControl, setBusy, showOpenNote } from './control'
 import { printInFrame } from './frame'
-import { keepBeforeGroup } from './keeper'
 import { fetchPdf } from './pdf'
+import { placeBefore } from './place'
 import { pdfRequestOf } from './request'
 import { accessTokenOf, SESSION_KEY } from './token'
 import type { InvoiceView } from './view'
@@ -90,7 +91,9 @@ export function activateDirectPrint(root: ParentNode & Node, pathname: string, e
       removeLast = remove
     })
   })
-  const stopKeeping = keepBeforeGroup(root, control.element, GROUP_SELECTOR)
+  const stopKeeping = keepPlaced(root, control.element, () => {
+    placeBefore(control.element, root.querySelector(GROUP_SELECTOR))
+  })
 
   return () => {
     controller.abort()

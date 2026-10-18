@@ -1,0 +1,39 @@
+/* Feature 4: the sort button in Find and recode's results toolbar (sheet variant B1), in Ext's toolbar look with the
+   dot of feature 1. Ext moves a block put into its layout, so the button is placed absolutely; the script sets its
+   offset from the right edge so that it stays left of the top pager */
+.bt-sort {
+  position: absolute;
+  top: 12px;
+  z-index: 1;
+  height: 26px;
+  padding: 0 10px;
+  border: 1px solid #c5c5c5;
+  border-radius: 3px;
+  background: #e9ebee;
+  color: #333333;
+  font: 12px Helvetica, Arial, sans-serif;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.bt-sort--active {
+  border-color: #048fc2;
+  color: #048fc2;
+  font-weight: 700;
+}
+
+.bt-sort--unavailable {
+  color: #8a8a8a;
+}
+
+.bt-sort__dot {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  width: 8px;
+  height: 8px;
+  border: 2px solid #f5f6f7;
+  border-radius: 50%;
+  background: #1f7a5c;
+  pointer-events: none;
+}
