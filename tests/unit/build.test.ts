@@ -10,7 +10,8 @@ interface BuiltManifest {
   host_permissions?: string[]
   content_scripts: { matches: string[], js: string[], css?: string[], world?: string }[]
   options_ui: { page: string, open_in_tab: boolean }
-  action: { default_popup: string }
+  action: { default_popup: string, default_icon?: Record<string, string> }
+  icons?: Record<string, string>
 }
 
 const TEMP_PREFIX = path.join(tmpdir(), 'bookkeeper-tweaks-build-')
@@ -19,6 +20,9 @@ const TEXT_ENCODING = 'utf8'
 const MODULE_SYNTAX = /^\s*(import|export)\b/m
 const LOCAL_REFERENCE = /(?:src|href)="([^":]+)"/g
 const PICKING_SELECTOR = '.bt-picking'
+// A PNG names its width and height in its first chunk, at these byte offsets
+const PNG_WIDTH_AT = 16
+const PNG_HEIGHT_AT = 20
 let outDir = ''
 
 async function readBuilt(file: string): Promise<string> {
@@ -27,6 +31,12 @@ async function readBuilt(file: string): Promise<string> {
 
 async function readManifest(): Promise<BuiltManifest> {
   return JSON.parse(await readBuilt(MANIFEST_FILE))
+}
+
+async function pngSizeOf(file: string): Promise<number[]> {
+  const bytes = await readFile(path.join(outDir, file))
+
+  return [bytes.readUInt32BE(PNG_WIDTH_AT), bytes.readUInt32BE(PNG_HEIGHT_AT)]
 }
 
 beforeAll(async () => {
@@ -64,6 +74,20 @@ describe('the built manifest', () => {
 
     expect(files).toEqual(['app.css', 'classic.css'])
     expect(sheets.every((sheet) => sheet.includes(PICKING_SELECTOR))).toBe(true)
+  })
+})
+
+describe('the built icons', () => {
+  it('names an icon of every size Chrome and the store use, each built at its size', async () => {
+    const icons = (await readManifest()).icons ?? {}
+    const sizes = await Promise.all(Object.values(icons).map(pngSizeOf))
+
+    expect(Object.keys(icons)).toEqual(['16', '32', '48', '128'])
+    expect(sizes).toEqual([[16, 16], [32, 32], [48, 48], [128, 128]])
+  })
+
+  it('gives the toolbar button the two small sizes', async () => {
+    expect((await readManifest()).action.default_icon).toEqual({ 16: 'icon-16.png', 32: 'icon-32.png' })
   })
 })
 

@@ -15,8 +15,8 @@ const LIST_NAMES = '-Z1'
 const PRINT_FILE = '-p'
 const LINE_END = '\n'
 const BUILT_FILES = [
-  'app.css', 'app.js', 'classic.css', 'classic.js', 'manifest.json', 'recode-page.js', 'settings.css', 'settings.html',
-  'settings.js',
+  'app.css', 'app.js', 'classic.css', 'classic.js', 'icon-128.png', 'icon-16.png', 'icon-32.png', 'icon-48.png',
+  'manifest.json', 'recode-page.js', 'settings.css', 'settings.html', 'settings.js',
 ]
 const DEVELOPMENT_MANIFEST = { name: 'Bookkeeper Tweaks', version: '0.1.0', key: 'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8A' }
 const run = promisify(execFile)

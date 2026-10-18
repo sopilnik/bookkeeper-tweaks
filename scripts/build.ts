@@ -20,7 +20,10 @@ const BUNDLE_OPTIONS = {
   target: 'chrome111',
   logLevel: 'warning',
 } satisfies BuildOptions
-const STATIC_FILES = ['manifest.json', 'src/settings-page/settings.html', 'src/settings-page/settings.css']
+const STATIC_FILES = [
+  'manifest.json', 'src/settings-page/settings.html', 'src/settings-page/settings.css',
+  'src/icons/icon-16.png', 'src/icons/icon-32.png', 'src/icons/icon-48.png', 'src/icons/icon-128.png',
+]
 
 async function bundleEntries(outDir: string): Promise<void> {
   await build({ ...BUNDLE_OPTIONS, outdir: outDir })
