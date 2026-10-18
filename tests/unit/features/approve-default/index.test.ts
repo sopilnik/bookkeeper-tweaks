@@ -7,7 +7,7 @@ import { installXuiStub } from '../../../e2e/xui-stub'
 import { loadEditorFixture } from '../../helpers/fixture'
 
 const PRIMARY_SELECTOR = '#ApproveAndEmailButton-approve-and-email'
-const NOTICE_SELECTOR = '.bt-approve-notice'
+const NOTICE_SELECTOR = '.bt-notice'
 const DOT_SELECTOR = '.bt-approve-dot'
 const APPROVE: ApproveAction = 'approve'
 const DRAFT_ONLY: ApproveAction = 'approve-and-view-next'

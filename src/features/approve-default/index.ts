@@ -1,7 +1,7 @@
 import type { ApproveAction } from '../../settings/schema'
+import { showNotice } from '../../shared/notice'
 import { takeOverApproveClicks } from './click'
 import { missingOptionMessage } from './decide'
-import { showNotice } from './notice'
 import { keepRelabelled } from './relabel'
 import { PRIMARY_SELECTOR } from './selectors'
 

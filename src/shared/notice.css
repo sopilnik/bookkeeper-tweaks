@@ -1,0 +1,35 @@
+/* The extension's callout under one of its places on Xero's page (feature 1's B1); it wraps its own text, because
+   Xero's page header sets white-space: nowrap */
+.bt-notice-host {
+  position: relative;
+}
+
+.bt-notice {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 2;
+  width: 300px;
+  padding: 8px 10px;
+  border: 1px solid #e8a33d;
+  border-radius: 4px;
+  background: #fff4e5;
+  color: #5c3b00;
+  font: 12px/1.4 system-ui, sans-serif;
+  text-align: left;
+  white-space: normal;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 0.15);
+}
+
+.bt-notice::before {
+  content: '';
+  position: absolute;
+  top: -6px;
+  right: 50px;
+  width: 10px;
+  height: 10px;
+  transform: rotate(45deg);
+  border-top: 1px solid #e8a33d;
+  border-left: 1px solid #e8a33d;
+  background: #fff4e5;
+}
