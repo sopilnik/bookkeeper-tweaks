@@ -1,36 +1,39 @@
 # Bookkeeper Tweaks
 
-A free, open-source Chrome extension (Manifest V3) for bookkeepers who use Xero: four small fixes to Xero's own web
-pages, all running in your browser.
+A free, open-source Chrome extension (Manifest V3) that adds four small fixes to the Xero pages bookkeepers use every
+day. Everything runs in your browser.
 
 Not affiliated with or endorsed by Xero Limited.
 
 ## Features
 
-1. **Approve default** — the Approve button on an invoice does the action you pick ("Approve" after install) instead
-   of "Approve & email".
-2. **Direct print** — a Print button next to Xero's "Print PDF" on an approved invoice prints it without downloading
-   its PDF first.
-3. **Top pager** — page navigation above long lists, not only below them: the invoice list, the Find and recode
-   results and the Bills list.
-4. **Recode sort** — a button above the Find and recode results sorts the rows on the loaded page by description,
-   A to Z, then Z to A.
+1. **Approve default.** The Approve button on an invoice does the action you choose instead of Xero's default,
+   "Approve & email". After installation the button does "Approve"; the settings offer all six actions.
+2. **Direct print.** On an approved invoice, a Print button next to "Print PDF" opens Chrome's print dialog with the
+   invoice. There is no PDF to download first.
+3. **Top pager.** Long lists get page navigation at the top as well as at the bottom: the invoice list, the Bills list
+   and the Find and recode results.
+4. **Recode sort.** A button above the Find and recode results sorts the rows on the current page by description, A to
+   Z or Z to A.
 
-Each feature has its own switch in the settings, which open from the extension's icon in Chrome's toolbar; all four
-are on after install.
+Each feature can be switched on or off in the settings, which open from the extension's icon in the Chrome toolbar.
+All four are on after installation.
 
-## Design rules
+## Your data
 
-- **Talks only to Xero — never to us or anyone else.** No analytics, no telemetry, no remote code.
-- **Uses your Xero sign-in only to print:** Direct print reads the session token Xero keeps in the page and sends it to
-  Xero with the same request Xero's own "Print PDF" makes. The token is never stored and never goes anywhere else.
-- **Never writes to Xero on its own:** the only Xero actions it triggers are the ones you click.
-- **One permission, `storage`,** for its settings, which stay in your browser. Its scripts run only on go.xero.com.
-  Recode sort runs one small script inside Xero's own page, because the table it sorts lives there; that script holds
-  no settings and adds nothing to the page.
-- **When Xero changes a page** so that a feature cannot find its place, the feature does nothing and the page works as
-  it does without the extension. Please [open an issue](https://github.com/sopilnik/bookkeeper-tweaks/issues) when that
-  happens.
+- Nothing is sent to us or to any third party. The extension contains no analytics, telemetry or remote code.
+- Your Xero sign-in is used only for printing. Direct print reads the session token that Xero keeps in the page and
+  sends it to Xero in the same request that Xero's own "Print PDF" makes. The token is never stored and is sent nowhere
+  else.
+- Changes in Xero come only from your own clicks. The extension never acts in Xero by itself.
+- One permission, `storage`, keeps your settings in your browser. The scripts run only on go.xero.com. Recode sort
+  runs one small script inside Xero's own page, because the table it sorts exists only there. That script holds no
+  settings and adds nothing to the page.
+- When Xero changes a page and a feature can no longer find what it needs, that feature stays inactive and the page
+  works as it does without the extension. Please
+  [open an issue](https://github.com/sopilnik/bookkeeper-tweaks/issues) when that happens.
+
+The [privacy policy](PRIVACY.md) explains what the extension handles and why.
 
 ## Build and test
 
