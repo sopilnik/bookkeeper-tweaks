@@ -25,6 +25,12 @@
       "js": ["classic.js"],
       "css": ["classic.css"],
       "run_at": "document_idle"
+    },
+    {
+      "matches": ["https://go.xero.com/Accounts/Recoding/*"],
+      "js": ["recode-page.js"],
+      "world": "MAIN",
+      "run_at": "document_idle"
     }
   ],
   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA01w8GMMyORUsurtCuYNT5fu4tC3plutrka1/x8qYIYz0CTVIULD/KqfO7A851UGa9Qm7Ewc2nlNKcNt7QPkd8OYZ5TDbz6v/qdAF9ldWmmGi93EUr8HxN0mWKwES9Wdx6Augf+r2Z9MblW7N4Mzpe7tn6zc3uedD9ssrPsQTep14IeEIY0ibXOLJK9pQiUK8oO+WIHyjM9g+LNWrd7Va22D1aQwouTV/8LmbbEZbdZdu3yoFFnaeR9BBx7dTERc3WjkVeghkvfY+8YM4qXdB8LeFE++1HcrrMQOEnLsxNZtR1i6HSGhfT/IvMmvFepEi0Ai6HFxputvoPCDkHLmApQIDAQAB"

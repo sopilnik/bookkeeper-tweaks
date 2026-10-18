@@ -12,6 +12,7 @@ const BUNDLE_OPTIONS = {
     { in: path.join(ROOT, 'src/entries/app.css'), out: 'app' },
     { in: path.join(ROOT, 'src/entries/classic.ts'), out: 'classic' },
     { in: path.join(ROOT, 'src/entries/classic.css'), out: 'classic' },
+    { in: path.join(ROOT, 'src/entries/recode-page.ts'), out: 'recode-page' },
     { in: path.join(ROOT, 'src/settings-page/settings.ts'), out: 'settings' },
   ],
   bundle: true,

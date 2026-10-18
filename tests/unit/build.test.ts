@@ -8,7 +8,7 @@ interface BuiltManifest {
   manifest_version: number
   permissions: string[]
   host_permissions?: string[]
-  content_scripts: { matches: string[], js: string[], css: string[] }[]
+  content_scripts: { matches: string[], js: string[], css?: string[], world?: string }[]
   options_ui: { page: string, open_in_tab: boolean }
   action: { default_popup: string }
 }
@@ -54,12 +54,12 @@ describe('the built manifest', () => {
     const files = (await readManifest()).content_scripts.flatMap((script) => script.js)
     const sources = await Promise.all(files.map(readBuilt))
 
-    expect(files).toEqual(['app.js', 'classic.js'])
+    expect(files).toEqual(['app.js', 'classic.js', 'recode-page.js'])
     expect(sources.filter((source) => MODULE_SYNTAX.test(source))).toEqual([])
   })
 
   it('builds the style sheet of every content script', async () => {
-    const files = (await readManifest()).content_scripts.flatMap((script) => script.css)
+    const files = (await readManifest()).content_scripts.flatMap((script) => script.css ?? [])
     const sheets = await Promise.all(files.map(readBuilt))
 
     expect(files).toEqual(['app.css', 'classic.css'])
@@ -72,6 +72,16 @@ describe('the classic content script', () => {
     const classic = (await readManifest()).content_scripts.find((script) => script.js.includes('classic.js'))
 
     expect(classic?.matches).toEqual(['https://go.xero.com/AccountsReceivable/Search.aspx*', 'https://go.xero.com/Accounts/Recoding/*'])
+  })
+})
+
+describe('the recode page script', () => {
+  it('runs in the page\'s own world on Find and recode only, with no style sheet', async () => {
+    const script = (await readManifest()).content_scripts.find((entry) => entry.js.includes('recode-page.js'))
+
+    expect(script?.world).toBe('MAIN')
+    expect(script?.matches).toEqual(['https://go.xero.com/Accounts/Recoding/*'])
+    expect(script?.css).toBeUndefined()
   })
 })
 
