@@ -1,7 +1,8 @@
 # Bookkeeper Tweaks
 
 A free, open-source Chrome extension (Manifest V3) that adds four small fixes to the Xero pages bookkeepers use every
-day. Everything runs in your browser.
+day. Everything runs in your browser. Install it from the
+[Chrome Web Store](https://chromewebstore.google.com/detail/bookkeeper-tweaks/jijbhlkgepmofkijomjnleghfhdeidgp).
 
 Not affiliated with or endorsed by Xero Limited.
 
