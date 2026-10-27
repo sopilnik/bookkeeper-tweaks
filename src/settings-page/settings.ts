@@ -35,6 +35,9 @@ async function start(): Promise<void> {
   form.addEventListener(CHANGE_EVENT, (event) => {
     void saveChange(form, event)
   })
+
+  // Inert in the markup, so a change made before the listener exists cannot be lost to fillForm
+  form.inert = false
 }
 
 void start()
